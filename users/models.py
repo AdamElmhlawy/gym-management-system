@@ -10,28 +10,36 @@ class User(AbstractUser):
         ('member', 'Member'),
         ('trainer', 'Trainer'),
     ]
+
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=20, choices=Role_Choices, default='member')
+
+    def __str__(self):
+        return f"{self.username} ({self.role})"
+
+class UserInformation(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile', blank=False, null=False)
     #branch = models.ManyToManyField()
     phone_number = models.CharField(max_length=15, blank=False, null=False, unique=True)
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female')], blank=False, null=False)
     date_of_birth = models.DateField(blank=False, null=False, help_text="Format: YYYY-MM-DD")
     join_date = models.DateField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+    
     def __str__(self):
-        return f"{self.username} ({self.role})"
+        return f"{self.user.username} ({self.user.role})"
 
 class TrainerProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='trainer_profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='trainer_profile', blank=False, null=False)
     salary = models.DecimalField(max_digits=10, decimal_places=2,
                                 validators=[MinValueValidator(Decimal('5000.0'))],
                                 blank = False, null = False)
-    years_of_experience = models.PositiveIntegerField()
+    years_of_experience = models.PositiveIntegerField(blank=False, null=False, default=0)
 
     def clean(self):
-        if not self.user:
-            raise ValidationError("Trainer must have a user")
-        
         if self.user.role != "trainer":
             raise ValidationError("User must have role 'trainer' to have a trainer profile")
         
@@ -40,12 +48,11 @@ class TrainerProfile(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return f"Trainer {self.user.username} have {self.years_of_experience} years of experience"
-    
+        return f"Trainer {self.user.username} have {self.years_of_experience} years of experience" 
 
 class MemberTrainer(models.Model):
-    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name='member_trainers')
-    trainer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trainer_members')
+    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name='member_trainers', blank=False, null=False)
+    trainer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trainer_members', blank=False, null=False)
     assigned_date = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     
@@ -63,8 +70,8 @@ class MemberTrainer(models.Model):
     
     def clean(self):
         if not self.member_id or not self.trainer_id:
-            raise ValidationError("Member and trainer are required")
-
+            raise ValidationError("Member and trainer are required")  
+        
         member = self.member
         trainer = self.trainer
 
