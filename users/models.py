@@ -32,8 +32,10 @@ class UserInformation(models.Model):
 
 class TrainerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='trainer_profile')
+    is_active = models.BooleanField(default=False)
+    is_fired = models.BooleanField(default=False)
     salary = models.DecimalField(max_digits=10, decimal_places=2,
-                                validators=[MinValueValidator(Decimal('5000.0'))],)
+                                validators=[MinValueValidator(Decimal('0.0'))],)
     years_of_experience = models.PositiveIntegerField(default=0)
 
     def clean(self):
@@ -72,7 +74,7 @@ class MemberTrainer(models.Model):
         if self.member.role != "member":
             raise ValidationError("members_must_have_role_'member'")
 
-        if self.trainer != "trainer":
+        if self.trainer.role != "trainer":
             raise ValidationError("trainers_must_have_role_'trainer'")
 
         if self.member_id == self.trainer_id:

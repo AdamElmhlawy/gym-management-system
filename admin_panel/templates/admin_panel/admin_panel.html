@@ -1,0 +1,625 @@
+{% extends "memberships/layout.html" %}
+
+{% block title %}Admin Panel - GymPro{% endblock %}
+
+{% block content %}
+
+<script>
+    const PEOPLE = {{ people_json|safe }};
+    const input = document.getElementById("adminSearchInput");
+    const filter = document.getElementById("roleFilter");
+    const box = document.getElementById("searchResults");
+
+    function renderResults(results) {
+        box.innerHTML = "";
+
+        if (results.length === 0) {
+            box.innerHTML = "<div class='search-card'>No results found</div>";
+            return;
+        }
+
+        results.forEach(p => {
+            const div = document.createElement("div");
+            div.className = "search-card";
+
+            div.innerHTML = `
+                <div>
+                    <strong>${p.name}</strong><br>
+                    <small>${p.email}</small>
+                </div>
+                <span>${p.role}</span>
+            `;
+
+            box.appendChild(div);
+        });
+    }
+
+    function filterData() {
+        const text = input.value.toLowerCase();
+        const role = filter.value;
+
+        const filtered = PEOPLE.filter(p => {
+            const matchText =
+                p.name.toLowerCase().includes(text) ||
+                p.email.toLowerCase().includes(text);
+
+            const matchRole = role === "all" || p.role === role;
+
+            return matchText && matchRole;
+        });
+
+        renderResults(filtered);
+    }
+
+    input.addEventListener("input", filterData);
+    filter.addEventListener("change", filterData);
+
+    // initial render
+    renderResults(PEOPLE);
+</script>
+
+<section class="admin-hero">
+    <section class="admin-search">
+        <div class="search-box">
+            <input type="text" id="adminSearchInput" placeholder="Search admins, members, trainers...">
+            
+            <select id="roleFilter">
+                <option value="all">All</option>
+                <option value="admin">Admins</option>
+                <option value="member">Members</option>
+                <option value="trainer">Trainers</option>
+            </select>
+        </div>
+
+        <div id="searchResults" class="search-results-box">
+            <!-- results will appear here -->
+        </div>
+    </section>
+    <div>
+        <div class="hero-badge">Admin Control</div>
+        <h1 class="admin-title">GymPro operations panel</h1>
+        <p class="admin-copy">
+            Manage members, trainers, branches, and plans from one focused workspace.
+        </p>
+    </div>
+</section>
+
+
+
+<div class="admin-stats">
+    <div class="stat-item">
+        <div class="stat-number">{{ admin_count }}</div>
+        <div class="stat-label">Admins</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ member_count }}</div>
+        <div class="stat-label">Members</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ trainer_count }}</div>
+        <div class="stat-label">Trainers</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ pending_trainer_count }}</div>
+        <div class="stat-label">Pending Trainers</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ fired_trainer_count }}</div>
+        <div class="stat-label">Fired Trainers</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ branch_count }}</div>
+        <div class="stat-label">Branches</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ plan_count }}</div>
+        <div class="stat-label">Plans</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">${{ total_income }}</div>
+        <div class="stat-label">Total Income</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">${{ total_salaries }}</div>
+        <div class="stat-label">Trainer Salaries</div>
+    </div>
+</div>
+
+<!-- FILTERS -->
+<div class="admin-filters">
+    <form method="get" class="filter-form">
+
+        <select name="trainer_status">
+            <option value="all">All Trainers</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="fired">Fired</option>
+        </select>
+
+        <select name="branch">
+            <option value="">All Branches</option>
+            {% for branch in branches %}
+                <option value="{{ branch.id }}">{{ branch.branch_name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="gender">
+            <option value="">Any Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <input type="number" name="min_salary" placeholder="Min Salary">
+        <input type="number" name="max_salary" placeholder="Max Salary">
+
+        <button type="submit" class="submit-button">Apply Filters</button>
+    </form>
+</div>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Admins</h2>
+            <p class="section-subtitle">Current administrators and their profile information.</p>
+        </div>
+    </div>
+
+    {% if admins %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Admin</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admin_user in admins %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if admin_user.user_information.profile_pic %}
+                                        <img src="{{ admin_user.user_information.profile_pic.url }}" alt="{{ admin_user.get_full_name|default:admin_user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ admin_user.get_full_name|default:admin_user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ admin_user.get_full_name|default:admin_user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ admin_user.email }}</td>
+                            <td>{{ admin_user.user_information.branch.branch_name }}</td>
+                            <td>{{ admin_user.user_information.phone_number }}</td>
+                            <td>{{ admin_user.user_information.get_gender_display }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">AD</div>
+                <div class="empty-state-text">No admins found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Members</h2>
+            <p class="section-subtitle">Promote trusted users to admin access.</p>
+        </div>
+    </div>
+
+    {% if members %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Member</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in members %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if member.user_information.profile_pic %}
+                                        <img src="{{ member.user_information.profile_pic.url }}" alt="{{ member.get_full_name|default:member.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ member.get_full_name|default:member.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ member.get_full_name|default:member.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ member.email }}</td>
+                            <td>{{ member.user_information.branch.branch_name }}</td>
+                            <td>{{ member.user_information.phone_number }}</td>
+                            <td>{{ member.user_information.get_gender_display }}</td>
+                            <td>
+                                <form action="{% url 'promote-member' member.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action">Promote</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">MB</div>
+                <div class="empty-state-text">No members found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<div class="admin-pagination">
+    {% if members.has_previous %}
+        <a class="pagination-btn"
+           href="?member_page={{ members.previous_page_number }}&search={{ search_query }}">
+            Prev
+        </a>
+    {% endif %}
+
+    <div class="pagination-info">
+        Page {{ members.number }} / {{ members.paginator.num_pages }}
+    </div>
+
+    {% if members.has_next %}
+        <a class="pagination-btn"
+           href="?member_page={{ members.next_page_number }}&search={{ search_query }}">
+            Next
+        </a>
+    {% endif %}
+</div>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Active Trainers</h2>
+            <p class="section-subtitle">Normal trainers who can currently work with members.</p>
+        </div>
+    </div>
+
+    {% if active_trainers %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in active_trainers %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if trainer.user.user_information.profile_pic %}
+                                        <img src="{{ trainer.user.user_information.profile_pic.url }}" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ trainer.user.get_full_name|default:trainer.user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ trainer.user.email }}</td>
+                            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+                            <td>{{ trainer.user.user_information.phone_number }}</td>
+                            <td>{{ trainer.user.user_information.get_gender_display }}</td>
+                            <td>{{ trainer.years_of_experience }} years</td>
+                            <td>${{ trainer.salary }}</td>
+                            <td>
+                                <form action="{% url 'fire-trainer' trainer.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action danger-action">Fire</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">PT</div>
+                <div class="empty-state-text">No active trainers found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<div class="admin-pagination">
+    {% if trainers.has_previous %}
+        <a class="pagination-btn"
+           href="?trainer_page={{ trainers.previous_page_number }}&trainer_status={{ trainer_filter }}">
+            Prev
+        </a>
+    {% endif %}
+
+    <div class="pagination-info">
+        Page {{ trainers.number }} / {{ trainers.paginator.num_pages }}
+    </div>
+
+    {% if trainers.has_next %}
+        <a class="pagination-btn"
+           href="?trainer_page={{ trainers.next_page_number }}&trainer_status={{ trainer_filter }}">
+            Next
+        </a>
+    {% endif %}
+</div>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Pending Trainers</h2>
+            <p class="section-subtitle">Trainers who are not fired and not active yet.</p>
+        </div>
+    </div>
+
+    {% if pending_trainers %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in pending_trainers %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if trainer.user.user_information.profile_pic %}
+                                        <img src="{{ trainer.user.user_information.profile_pic.url }}" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ trainer.user.get_full_name|default:trainer.user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ trainer.user.email }}</td>
+                            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+                            <td>{{ trainer.user.user_information.phone_number }}</td>
+                            <td>{{ trainer.user.user_information.get_gender_display }}</td>
+                            <td>{{ trainer.years_of_experience }} years</td>
+                            <td>${{ trainer.salary }}</td>
+                            <td>
+                                <form action="{% url 'accept-trainer' trainer.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action">Hire</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">PN</div>
+                <div class="empty-state-text">No pending trainers found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Fired Trainers</h2>
+            <p class="section-subtitle">Previously removed trainers with an option to hire again.</p>
+        </div>
+    </div>
+
+    {% if fired_trainers %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in fired_trainers %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if trainer.user.user_information.profile_pic %}
+                                        <img src="{{ trainer.user.user_information.profile_pic.url }}" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ trainer.user.get_full_name|default:trainer.user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ trainer.user.email }}</td>
+                            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+                            <td>{{ trainer.user.user_information.phone_number }}</td>
+                            <td>{{ trainer.user.user_information.get_gender_display }}</td>
+                            <td>{{ trainer.years_of_experience }} years</td>
+                            <td>${{ trainer.salary }}</td>
+                            <td>
+                                <form action="{% url 'accept-trainer' trainer.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action">Hire Again</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">FR</div>
+                <div class="empty-state-text">No fired trainers found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<section class="admin-section admin-management-grid">
+    <div class="admin-panel-card">
+        <div class="admin-section-heading">
+            <div>
+                <h2 class="section-title">Branches</h2>
+                <p class="section-subtitle">Create and remove gym locations.</p>
+            </div>
+        </div>
+
+        <form action="{% url 'create-branch' %}" method="post" class="admin-form">
+            {% csrf_token %}
+            <div class="form-field">
+                <label for="branch-name">Branch name</label>
+                <input id="branch-name" type="text" name="branch_name" required>
+            </div>
+            <div class="form-field">
+                <label for="branch-city">City</label>
+                <select id="branch-city" name="city" required>
+                    <option value="tanta">Tanta</option>
+                    <option value="cairo">Cairo</option>
+                    <option value="alexandria">Alexandria</option>
+                    <option value="mansura">Mansura</option>
+                    <option value="suez">Suez</option>
+                    <option value="north_sinai">North Sinai</option>
+                    <option value="boston">Boston</option>
+                    <option value="london">London</option>
+                    <option value="berlin">Berlin</option>
+                    <option value="barcelona">Barcelona</option>
+                    <option value="moscow">Moscow</option>
+                    <option value="stockholm">Stockholm</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Create Branch</button>
+        </form>
+
+        <div class="admin-list">
+            {% for branch in branches %}
+                <div class="admin-list-item">
+                    <div>
+                        <strong>{{ branch.branch_name }}</strong>
+                        <span>{{ branch.get_city_display }}</span>
+                    </div>
+                    <form action="{% url 'delete-branch' branch.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="icon-action danger-action">Delete</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p class="admin-empty-copy">No branches yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="admin-panel-card">
+        <div class="admin-section-heading">
+            <div>
+                <h2 class="section-title">Plans</h2>
+                <p class="section-subtitle">Build membership offers for branches.</p>
+            </div>
+        </div>
+
+        <form action="{% url 'create-plan' %}" method="post" class="admin-form plan-form">
+            {% csrf_token %}
+            <div class="form-field">
+                <label for="plan-name">Plan name</label>
+                <input id="plan-name" type="text" name="plan_name" required>
+            </div>
+            <div class="form-field">
+                <label for="plan-branch">Branch</label>
+                <select id="plan-branch" name="branch" required>
+                    {% for branch in branches %}
+                        <option value="{{ branch.id }}">{{ branch.branch_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="plan-price">Price</label>
+                <input id="plan-price" type="number" name="price" min="500" step="0.01" required>
+            </div>
+            <div class="form-field">
+                <label for="plan-duration">Duration</label>
+                <select id="plan-duration" name="duration" required>
+                    <option value="one_month">One month</option>
+                    <option value="three_months">Three months</option>
+                    <option value="six_months">Six months</option>
+                    <option value="twelve_months">Twelve months</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="plan-sessions">Sessions</label>
+                <input id="plan-sessions" type="number" name="number_of_sessions" min="0" value="10" required>
+            </div>
+            <div class="form-field">
+                <label for="plan-spa">Spa sessions</label>
+                <input id="plan-spa" type="number" name="number_of_spa_sessions" min="0" value="0">
+            </div>
+            <div class="form-field">
+                <label for="plan-sauna">Sauna sessions</label>
+                <input id="plan-sauna" type="number" name="number_of_suana_sessions" min="0" value="0">
+            </div>
+            <div class="form-field">
+                <label for="plan-jacuzzi">Jacuzzi sessions</label>
+                <input id="plan-jacuzzi" type="number" name="number_of_jacuzzi_sessions" min="0" value="0">
+            </div>
+            <button type="submit" class="submit-button">Create Plan</button>
+        </form>
+
+        <div class="admin-list">
+            {% for plan in plans %}
+                <div class="admin-list-item">
+                    <div>
+                        <strong>{{ plan.plan_name }}</strong>
+                        <span>{{ plan.branch.branch_name }} - {{ plan.get_duration_display }} - ${{ plan.price }}</span>
+                    </div>
+                    <form action="{% url 'delete-plan' plan.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="icon-action danger-action">Delete</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p class="admin-empty-copy">No plans yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

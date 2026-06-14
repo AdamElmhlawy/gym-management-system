@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .models import Branch, Plan
 from users.models import User, TrainerProfile
+
 
 def home_view(request):
     members = User.objects.filter(role="member").select_related("user_information")
@@ -22,3 +22,4 @@ def home_view(request):
     }
 
     return render(request, "memberships/home.html", context)
+

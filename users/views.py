@@ -6,6 +6,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
 
 
+
 def register(request):
     if request.method == "POST":
         user_form = UserRegisterForm(request.POST)
@@ -38,9 +39,3 @@ class UserLoginView(LoginView):
     
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy("login")
-
-def admin_panel(request):
-    if request.method == "POST":
-        pass
-    else:
-        return render(request, "users/admin_panel.html")
