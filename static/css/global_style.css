@@ -476,6 +476,180 @@ section {
     font-weight: 700;
 }
 
+/* Auth pages */
+.auth-page {
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    margin: 0 calc(50% - 50vw);
+    padding: 4rem max(1rem, calc((100vw - 1200px) / 2));
+    background:
+        linear-gradient(90deg, rgba(16, 17, 20, 0.98), rgba(16, 17, 20, 0.78)),
+        url("https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1800&q=80") center / cover;
+}
+
+.auth-shell {
+    width: min(1100px, 100%);
+    display: grid;
+    grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 1.1fr);
+    gap: 1rem;
+}
+
+.auth-panel {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(24, 27, 32, 0.92);
+    box-shadow: var(--shadow);
+}
+
+.auth-intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 620px;
+    padding: 2rem;
+}
+
+.auth-title {
+    max-width: 420px;
+    margin-bottom: 1rem;
+    color: var(--text);
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+.auth-copy {
+    max-width: 440px;
+    color: #d8d2c8;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.auth-highlights {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+
+.auth-highlights div {
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.auth-highlights span {
+    color: var(--green);
+    font-size: 0.8rem;
+    font-weight: 900;
+}
+
+.auth-highlights strong {
+    display: block;
+    margin: 0.25rem 0;
+    color: var(--text);
+}
+
+.auth-highlights p {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.signup-form {
+    padding: 2rem;
+}
+
+.form-section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-section h2 {
+    grid-column: 1 / -1;
+    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+
+.form-field {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.form-field label {
+    color: #e7dfd2;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    background: rgba(16, 17, 20, 0.84);
+    color: var(--text);
+    padding: 0 0.85rem;
+    font: inherit;
+}
+
+.form-field input[type="file"] {
+    padding: 0.6rem;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    border-color: rgba(71, 209, 124, 0.72);
+    box-shadow: 0 0 0 3px rgba(71, 209, 124, 0.16);
+    outline: none;
+}
+
+.form-field small,
+.field-error {
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.field-error {
+    color: #ff9d93;
+    font-weight: 700;
+}
+
+.form-alert {
+    margin-bottom: 1rem;
+    padding: 0.85rem;
+    border: 1px solid rgba(255, 111, 97, 0.42);
+    border-radius: 8px;
+    background: rgba(255, 111, 97, 0.12);
+    color: #ffbbb4;
+}
+
+.submit-button {
+    width: 100%;
+    min-height: 50px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--green);
+    color: #08120c;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 900;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submit-button:hover,
+.submit-button:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 36px rgba(71, 209, 124, 0.24);
+    outline: none;
+}
+
 /* Responsive */
 @media (max-width: 960px) {
     .header-container {
@@ -503,6 +677,14 @@ section {
     .stats-bar {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .auth-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-intro {
+        min-height: auto;
+    }
 }
 
 @media (max-width: 620px) {
@@ -521,6 +703,19 @@ section {
     }
 
     .showcase-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-page {
+        padding: 2rem 0.75rem;
+    }
+
+    .signup-form,
+    .auth-intro {
+        padding: 1.1rem;
+    }
+
+    .form-section {
         grid-template-columns: 1fr;
     }
 }

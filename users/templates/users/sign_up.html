@@ -1,0 +1,79 @@
+{% extends "memberships/layout.html" %}
+
+{% block title %}Sign Up - GymPro{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+    <div class="auth-shell">
+        <div class="auth-panel auth-intro">
+            <div class="hero-badge">New Member</div>
+            <h1 class="auth-title">Create your GymPro account</h1>
+            <p class="auth-copy">
+                Join the gym system, add your profile details, and get ready to connect with plans, branches, trainers, and members.
+            </p>
+
+            <div class="auth-highlights">
+                <div>
+                    <span>01</span>
+                    <strong>Account</strong>
+                    <p>Choose your login details.</p>
+                </div>
+                <div>
+                    <span>02</span>
+                    <strong>Profile</strong>
+                    <p>Add your photo and member info.</p>
+                </div>
+            </div>
+        </div>
+
+        <form class="auth-panel signup-form" method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% if user_form.non_field_errors or information_form.non_field_errors %}
+                <div class="form-alert">
+                    {{ user_form.non_field_errors }}
+                    {{ information_form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-section">
+                <h2>Account Details</h2>
+
+                {% for field in user_form %}
+                    <div class="form-field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small>{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-section">
+                <h2>Profile Details</h2>
+
+                {% for field in information_form %}
+                    <div class="form-field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small>{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="submit-button">Create Account</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
