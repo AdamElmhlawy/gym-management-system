@@ -25,16 +25,13 @@
         <nav class="site-nav" aria-label="Main navigation">
             <ul class="nav-left">
                 <li><a href="{% url 'home' %}" class="nav-link is-active">Home</a></li>
-                <li><a href="#" class="nav-link">Members</a></li>
-                <li><a href="#" class="nav-link">Trainers</a></li>
-                <!--
-                    {% for branch in branches %}
-                        <li><a href="#" class="nav-link">{{ branch.branch_name }}</a></li>
-                    {% endfor %}
-                    {% for plan in plans %}
-                        <li><a href="#" class="nav-link plan-link">{{ plan.plan_name }}</a></li>
-                    {% endfor %}
-                -->
+                {% if user.is_authenticated and user.role == "admin" %}
+                    <li><a href="#" class="nav-link">Admin Panel</a></li>
+                {% endif %}
+                
+                <li><a href="#" class="nav-link">Branches</a></li>
+                <li><a href="#" class="nav-link plan-link">Plans</a></li>
+                
             </ul>
 
             <ul class="nav-right">

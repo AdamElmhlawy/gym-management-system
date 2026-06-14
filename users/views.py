@@ -38,3 +38,9 @@ class UserLoginView(LoginView):
     
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy("login")
+
+def admin_panel(request):
+    if request.method == "POST":
+        pass
+    else:
+        return render(request, "users/admin_panel.html")

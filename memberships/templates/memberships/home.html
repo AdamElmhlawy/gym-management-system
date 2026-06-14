@@ -56,9 +56,9 @@
             {% for trainer in trainers %}
                 <a href="#" class="showcase-card person-button">
                     <div class="card-header trainer-header">
-                        {% if trainer.user.user_profile.profile_pic %}
+                        {% if trainer.user.user_information.profile_pic %}
                             <img
-                                src="{{ trainer.user.user_profile.profile_pic.url }}"
+                                src="{{ trainer.user.user_information.profile_pic.url }}"
                                 alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture"
                                 class="profile-avatar"
                             >
@@ -84,11 +84,16 @@
                             <strong>Experience:</strong>
                             {{ trainer.years_of_experience }} years
                         </div>
-
-                        <div class="card-detail">
-                            <strong>Salary:</strong>
-                            ${{ trainer.salary }}
-                        </div>
+                        {% if user.is_authenticated and user.role == "admin" %}
+                            <div class="card-detail">
+                                <strong>Salary:</strong>
+                                ${{ trainer.salary }}
+                            </div>
+                            <div class="card-detail">
+                                <strong>Number:</strong>
+                                {{ trainer.user.user_information.phone_number }}
+                            </div>
+                        {% endif %}
 
                         <div class="card-badges">
                             <span class="credit-badge trainer">Trainer</span>
@@ -121,9 +126,9 @@
             {% for member in members %}
                 <a href="#" class="showcase-card person-button">
                     <div class="card-header member-header">
-                        {% if member.user_profile.profile_pic %}
+                        {% if member.user_information.profile_pic %}
                             <img
-                                src="{{ member.user_profile.profile_pic.url }}"
+                                src="{{ member.user_information.profile_pic.url }}"
                                 alt="{{ member.get_full_name|default:member.username }} profile picture"
                                 class="profile-avatar"
                             >
@@ -144,6 +149,12 @@
                         <div class="card-email">
                             {{ member.email }}
                         </div>
+                        {% if user.is_authenticated and user.role == "admin" %}
+                            <div class="card-detail">
+                                <strong>Number:</strong>
+                                {{ member.user_information.phone_number }}
+                            </div>
+                        {% endif %}
 
                         <div class="card-badges">
                             <span class="credit-badge member">Member</span>

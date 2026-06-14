@@ -18,7 +18,7 @@ class User(AbstractUser):
         return f"{self.username} ({self.role})"
 
 class UserInformation(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_information')
     profile_pic = models.ImageField(upload_to="profile_pics/",
                                       default="defaults/default_profile.png")
     branch = models.ForeignKey("memberships.Branch", on_delete=models.CASCADE, related_name='user_branch')
@@ -66,16 +66,13 @@ class MemberTrainer(models.Model):
         ]
     
     def clean(self):
-        if not self.member_id or not self.trainer_id:
-            raise ValidationError("member_and_trainer_are_required")  
-        
-        member = self.member
-        trainer = self.trainer
+        if self.trainer.user_information.branch_id !=self.member.user_information.branch_id:
+            raise ValidationError("Trainer must be from same branch")
 
-        if member.role != "member":
+        if self.member.role != "member":
             raise ValidationError("members_must_have_role_'member'")
 
-        if trainer.role != "trainer":
+        if self.trainer != "trainer":
             raise ValidationError("trainers_must_have_role_'trainer'")
 
         if self.member_id == self.trainer_id:
