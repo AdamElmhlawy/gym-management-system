@@ -4,77 +4,7 @@
 
 {% block content %}
 
-<script>
-    const PEOPLE = {{ people_json|safe }};
-    const input = document.getElementById("adminSearchInput");
-    const filter = document.getElementById("roleFilter");
-    const box = document.getElementById("searchResults");
-
-    function renderResults(results) {
-        box.innerHTML = "";
-
-        if (results.length === 0) {
-            box.innerHTML = "<div class='search-card'>No results found</div>";
-            return;
-        }
-
-        results.forEach(p => {
-            const div = document.createElement("div");
-            div.className = "search-card";
-
-            div.innerHTML = `
-                <div>
-                    <strong>${p.name}</strong><br>
-                    <small>${p.email}</small>
-                </div>
-                <span>${p.role}</span>
-            `;
-
-            box.appendChild(div);
-        });
-    }
-
-    function filterData() {
-        const text = input.value.toLowerCase();
-        const role = filter.value;
-
-        const filtered = PEOPLE.filter(p => {
-            const matchText =
-                p.name.toLowerCase().includes(text) ||
-                p.email.toLowerCase().includes(text);
-
-            const matchRole = role === "all" || p.role === role;
-
-            return matchText && matchRole;
-        });
-
-        renderResults(filtered);
-    }
-
-    input.addEventListener("input", filterData);
-    filter.addEventListener("change", filterData);
-
-    // initial render
-    renderResults(PEOPLE);
-</script>
-
 <section class="admin-hero">
-    <section class="admin-search">
-        <div class="search-box">
-            <input type="text" id="adminSearchInput" placeholder="Search admins, members, trainers...">
-            
-            <select id="roleFilter">
-                <option value="all">All</option>
-                <option value="admin">Admins</option>
-                <option value="member">Members</option>
-                <option value="trainer">Trainers</option>
-            </select>
-        </div>
-
-        <div id="searchResults" class="search-results-box">
-            <!-- results will appear here -->
-        </div>
-    </section>
     <div>
         <div class="hero-badge">Admin Control</div>
         <h1 class="admin-title">GymPro operations panel</h1>
@@ -125,36 +55,6 @@
     </div>
 </div>
 
-<!-- FILTERS -->
-<div class="admin-filters">
-    <form method="get" class="filter-form">
-
-        <select name="trainer_status">
-            <option value="all">All Trainers</option>
-            <option value="active">Active</option>
-            <option value="pending">Pending</option>
-            <option value="fired">Fired</option>
-        </select>
-
-        <select name="branch">
-            <option value="">All Branches</option>
-            {% for branch in branches %}
-                <option value="{{ branch.id }}">{{ branch.branch_name }}</option>
-            {% endfor %}
-        </select>
-
-        <select name="gender">
-            <option value="">Any Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-
-        <input type="number" name="min_salary" placeholder="Min Salary">
-        <input type="number" name="max_salary" placeholder="Max Salary">
-
-        <button type="submit" class="submit-button">Apply Filters</button>
-    </form>
-</div>
 
 <section class="admin-section">
     <div class="admin-section-heading">
@@ -267,25 +167,6 @@
     {% endif %}
 </section>
 
-<div class="admin-pagination">
-    {% if members.has_previous %}
-        <a class="pagination-btn"
-           href="?member_page={{ members.previous_page_number }}&search={{ search_query }}">
-            Prev
-        </a>
-    {% endif %}
-
-    <div class="pagination-info">
-        Page {{ members.number }} / {{ members.paginator.num_pages }}
-    </div>
-
-    {% if members.has_next %}
-        <a class="pagination-btn"
-           href="?member_page={{ members.next_page_number }}&search={{ search_query }}">
-            Next
-        </a>
-    {% endif %}
-</div>
 
 <section class="admin-section">
     <div class="admin-section-heading">
@@ -350,25 +231,6 @@
     {% endif %}
 </section>
 
-<div class="admin-pagination">
-    {% if trainers.has_previous %}
-        <a class="pagination-btn"
-           href="?trainer_page={{ trainers.previous_page_number }}&trainer_status={{ trainer_filter }}">
-            Prev
-        </a>
-    {% endif %}
-
-    <div class="pagination-info">
-        Page {{ trainers.number }} / {{ trainers.paginator.num_pages }}
-    </div>
-
-    {% if trainers.has_next %}
-        <a class="pagination-btn"
-           href="?trainer_page={{ trainers.next_page_number }}&trainer_status={{ trainer_filter }}">
-            Next
-        </a>
-    {% endif %}
-</div>
 
 <section class="admin-section">
     <div class="admin-section-heading">
