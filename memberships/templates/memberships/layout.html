@@ -15,28 +15,44 @@
 
 <header>
     <div class="header-container">
-        <a href="#" class="logo" aria-label="GymPro home">
+        <a href="{% url 'home' %}" class="logo" aria-label="GymPro home">
+            <!--
             <span class="logo-mark">GP</span>
+            -->
             <span>GymPro</span>
         </a>
 
         <nav class="site-nav" aria-label="Main navigation">
             <ul class="nav-left">
-                <li><a href="#" class="nav-link is-active">Home</a></li>
+                <li><a href="{% url 'home' %}" class="nav-link is-active">Home</a></li>
                 <li><a href="#" class="nav-link">Members</a></li>
                 <li><a href="#" class="nav-link">Trainers</a></li>
-                {% for branch in branches %}
-                    <li><a href="#" class="nav-link">{{ branch.branch_name }}</a></li>
-                {% endfor %}
-                {% for plan in plans %}
-                    <li><a href="#" class="nav-link plan-link">{{ plan.plan_name }}</a></li>
-                {% endfor %}
+                <!--
+                    {% for branch in branches %}
+                        <li><a href="#" class="nav-link">{{ branch.branch_name }}</a></li>
+                    {% endfor %}
+                    {% for plan in plans %}
+                        <li><a href="#" class="nav-link plan-link">{{ plan.plan_name }}</a></li>
+                    {% endfor %}
+                -->
             </ul>
 
             <ul class="nav-right">
-                <li><a href="#" class="auth-link">Log in</a></li>
-                <li><a href="#" class="auth-link">Logout</a></li>
-                <li><a href="sign-up" class="auth-link auth-primary">Sign up</a></li>
+                {% if user.is_authenticated %}
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" class="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="auth-link logout-button">
+                                Logout
+                            </button>
+                        </form>
+                    </li>
+                {% else %}
+
+                    <li><a href="{% url 'login' %}" class="auth-link">Log in</a></li>
+                    <li><a href="{% url 'signup' %}" class="auth-link auth-primary">Sign up</a></li>
+
+                {% endif %}
             </ul>
         </nav>
     </div>

@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from .forms import UserRegisterForm, UserInformationForm
 from django.db import transaction
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import reverse_lazy
+
 
 def register(request):
     if request.method == "POST":
@@ -22,5 +25,16 @@ def register(request):
         user_form = UserRegisterForm()
         information_form = UserInformationForm()
     
-    return render(request, "users/sign_up.html", {"user_form": user_form,
+    return render(request, "users/signup.html", {"user_form": user_form,
                                                   "information_form": information_form,})
+
+
+class UserLoginView(LoginView):
+    template_name = "users/login.html"
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy("home")
+    
+class UserLogoutView(LogoutView):
+    next_page = reverse_lazy("login")

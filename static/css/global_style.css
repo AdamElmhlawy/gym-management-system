@@ -135,6 +135,18 @@ header {
     background: rgba(255, 255, 255, 0.04);
 }
 
+.logout-form {
+    display: flex;
+}
+
+.logout-button {
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+}
+
 .nav-link:hover,
 .nav-link:focus-visible,
 .auth-link:hover,
@@ -185,7 +197,7 @@ footer {
     padding: 5rem max(2rem, calc((100vw - 1200px) / 2)) 4rem;
     background:
         linear-gradient(90deg, rgba(16, 17, 20, 0.94) 0%, rgba(16, 17, 20, 0.76) 42%, rgba(16, 17, 20, 0.35) 100%),
-        url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1800&q=80") center / cover;
+        url("https://images.unsplash.com/photo-1674834727206-4bc272bfd8da?auto=format&fit=crop&w=1800&q=80") center / cover;
     position: relative;
 }
 
@@ -495,6 +507,11 @@ section {
     gap: 1rem;
 }
 
+.login-shell {
+    width: min(980px, 100%);
+    grid-template-columns: minmax(260px, 0.95fr) minmax(320px, 0.85fr);
+}
+
 .auth-panel {
     border: 1px solid var(--line);
     border-radius: 8px;
@@ -566,6 +583,10 @@ section {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
     margin-bottom: 1.5rem;
+}
+
+.login-section {
+    grid-template-columns: 1fr;
 }
 
 .form-section h2 {
@@ -647,6 +668,25 @@ section {
 .submit-button:focus-visible {
     transform: translateY(-2px);
     box-shadow: 0 18px 36px rgba(71, 209, 124, 0.24);
+    outline: none;
+}
+
+.auth-switch {
+    margin-top: 1rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.auth-switch a {
+    color: var(--green);
+    text-decoration: none;
+}
+
+.auth-switch a:hover,
+.auth-switch a:focus-visible {
+    text-decoration: underline;
     outline: none;
 }
 

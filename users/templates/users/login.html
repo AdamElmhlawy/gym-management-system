@@ -1,0 +1,70 @@
+{% extends "memberships/layout.html" %}
+
+{% block title %}Log In - GymPro{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+    <div class="auth-shell login-shell">
+        <div class="auth-panel auth-intro">
+            <div class="hero-badge">Welcome Back</div>
+            <h1 class="auth-title">Log in to your GymPro account</h1>
+            <p class="auth-copy">
+                Pick up where you left off with your members, trainers, branches, and membership plans.
+            </p>
+
+            <div class="auth-highlights">
+                <div>
+                    <span>01</span>
+                    <strong>Secure Access</strong>
+                    <p>Use your username and password to enter your dashboard.</p>
+                </div>
+                <div>
+                    <span>02</span>
+                    <strong>Fast Return</strong>
+                    <p>After login, you will go straight back to the home page.</p>
+                </div>
+            </div>
+        </div>
+
+        <form class="auth-panel signup-form login-form" method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-alert">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-section login-section">
+                <h2>Account Login</h2>
+
+                {% for field in form %}
+                    <div class="form-field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small>{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+            <button type="submit" class="submit-button">Log In</button>
+
+            <p class="auth-switch">
+                New to GymPro?
+                <a href="{% url 'signup' %}">Create an account</a>
+            </p>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
