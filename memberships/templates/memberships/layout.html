@@ -15,13 +15,28 @@
 
 <header>
     <div class="header-container">
-        <a href="/" class="logo">💪 GymPro</a>
+        <a href="#" class="logo" aria-label="GymPro home">
+            <span class="logo-mark">GP</span>
+            <span>GymPro</span>
+        </a>
 
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/members/">Members</a></li>
-                <li><a href="/trainers/">Trainers</a></li>
+        <nav class="site-nav" aria-label="Main navigation">
+            <ul class="nav-left">
+                <li><a href="#" class="nav-link is-active">Home</a></li>
+                <li><a href="#" class="nav-link">Members</a></li>
+                <li><a href="#" class="nav-link">Trainers</a></li>
+                {% for branch in branches %}
+                    <li><a href="#" class="nav-link">{{ branch.branch_name }}</a></li>
+                {% endfor %}
+                {% for plan in plans %}
+                    <li><a href="#" class="nav-link plan-link">{{ plan.plan_name }}</a></li>
+                {% endfor %}
+            </ul>
+
+            <ul class="nav-right">
+                <li><a href="#" class="auth-link">Log in</a></li>
+                <li><a href="#" class="auth-link">Logout</a></li>
+                <li><a href="#" class="auth-link auth-primary">Sign up</a></li>
             </ul>
         </nav>
     </div>
@@ -32,7 +47,7 @@
 </main>
 
 <footer>
-    <p>&copy; 2024 Gym Management System. All rights reserved.</p>
+    <p>&copy; 2026 Gym Management System. All rights reserved.</p>
 </footer>
 
 {% block extra_js %}{% endblock %}

@@ -12,7 +12,7 @@ class UserInformationInline(admin.StackedInline):
     model = UserInformation
     can_delete = False
     verbose_name_plural = "User Information"
-    fields = ("phone_number", "gender", "date_of_birth", "branch")
+    fields = ("profile_pic", "phone_number", "gender", "date_of_birth", "branch")
 
 
 # USER ADMIN

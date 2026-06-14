@@ -1,17 +1,12 @@
 {% extends "memberships/layout.html" %}
-{% load static %}
 
 {% block title %}Home - Gym Management System{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
-{% endblock %}
 
 {% block content %}
 
 <section class="hero-section">
     <div class="hero-content">
-        <div class="hero-badge">✨ Gym Management</div>
+        <div class="hero-badge">Gym Management</div>
 
         <h1 class="hero-title">
             Build your fitness journey<br>
@@ -22,7 +17,7 @@
             Manage trainers and members in one organized platform.
         </p>
 
-        <button class="hero-cta">Get Started →</button>
+        <a href="#" class="hero-cta">Get Started</a>
     </div>
 </section>
 
@@ -41,12 +36,17 @@
         <div class="stat-number">{{ total_users }}</div>
         <div class="stat-label">Total Users</div>
     </div>
+
+    <div class="stat-item">
+        <div class="stat-number">{{ plan_count }}</div>
+        <div class="stat-label">Membership Plans</div>
+    </div>
 </div>
 
 <!-- Trainers -->
 
 <section>
-    <h2 class="section-title">🏋️ Meet Our Trainers</h2>
+    <h2 class="section-title">Meet Our Trainers</h2>
     <p class="section-subtitle">
         {{ trainer_count }} certified professionals ready to help.
     </p>
@@ -54,12 +54,26 @@
     {% if trainers %}
         <div class="showcase-grid">
             {% for trainer in trainers %}
-                <div class="showcase-card">
-                    <div class="card-header">🏋️</div>
+                <a href="#" class="showcase-card person-button">
+                    <div class="card-header trainer-header">
+                        {% if trainer.user.user_profile.profile_pic %}
+                            <img
+                                src="{{ trainer.user.user_profile.profile_pic.url }}"
+                                alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture"
+                                class="profile-avatar"
+                            >
+                        {% else %}
+                            <img
+                                src="/media/defaults/default_profile.png"
+                                alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture"
+                                class="profile-avatar"
+                            >
+                        {% endif %}
+                    </div>
 
                     <div class="card-content">
                         <div class="card-name">
-                            {{ trainer.user.first_name }} {{ trainer.user.last_name }}
+                            {{ trainer.user.get_full_name|default:trainer.user.username }}
                         </div>
 
                         <div class="card-email">
@@ -80,12 +94,12 @@
                             <span class="credit-badge trainer">Trainer</span>
                         </div>
                     </div>
-                </div>
+                </a>
             {% endfor %}
         </div>
     {% else %}
         <div class="empty-state">
-            <div class="empty-state-icon">🏋️</div>
+            <div class="empty-state-icon">PT</div>
             <div class="empty-state-text">
                 No trainers available.
             </div>
@@ -96,7 +110,7 @@
 <!-- Members -->
 
 <section>
-    <h2 class="section-title">👥 Our Members</h2>
+    <h2 class="section-title">Our Members</h2>
 
     <p class="section-subtitle">
         {{ member_count }} active members.
@@ -105,12 +119,26 @@
     {% if members %}
         <div class="showcase-grid">
             {% for member in members %}
-                <div class="showcase-card">
-                    <div class="card-header">👥</div>
+                <a href="#" class="showcase-card person-button">
+                    <div class="card-header member-header">
+                        {% if member.user_profile.profile_pic %}
+                            <img
+                                src="{{ member.user_profile.profile_pic.url }}"
+                                alt="{{ member.get_full_name|default:member.username }} profile picture"
+                                class="profile-avatar"
+                            >
+                        {% else %}
+                            <img
+                                src="/media/defaults/default_profile.png"
+                                alt="{{ member.get_full_name|default:member.username }} profile picture"
+                                class="profile-avatar"
+                            >
+                        {% endif %}
+                    </div>
 
                     <div class="card-content">
                         <div class="card-name">
-                            {{ member.first_name }} {{ member.last_name }}
+                            {{ member.get_full_name|default:member.username }}
                         </div>
 
                         <div class="card-email">
@@ -121,12 +149,12 @@
                             <span class="credit-badge member">Member</span>
                         </div>
                     </div>
-                </div>
+                </a>
             {% endfor %}
         </div>
     {% else %}
         <div class="empty-state">
-            <div class="empty-state-icon">👥</div>
+            <div class="empty-state-icon">MB</div>
             <div class="empty-state-text">
                 No members available.
             </div>

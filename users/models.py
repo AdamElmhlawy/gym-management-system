@@ -19,6 +19,8 @@ class User(AbstractUser):
 
 class UserInformation(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
+    profile_pic = models.ImageField(upload_to="profile_pics/",
+                                      default="defaults/default_profile.png")
     branch = models.ForeignKey("memberships.Branch", on_delete=models.CASCADE, related_name='user_branch')
     phone_number = models.CharField(max_length=15, blank=False, null=False, unique=True)
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female')], blank=False, null=False)
