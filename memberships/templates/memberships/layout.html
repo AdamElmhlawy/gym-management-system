@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gym Management System{% endblock %}</title>
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="{% static 'css/global_style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <a href="/" class="logo">💪 GymPro</a>
+
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/members/">Members</a></li>
+                <li><a href="/trainers/">Trainers</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="main-container">
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <p>&copy; 2024 Gym Management System. All rights reserved.</p>
+</footer>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

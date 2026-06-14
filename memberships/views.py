@@ -7,4 +7,12 @@ def home_view(request):
     members = User.objects.filter(role="member")
     trainers = User.objects.filter(role="trainer")
 
-    return render(request, "memberships/home.html", {"members": members, "trainers":trainers})
+    context = {
+    "members": members,
+    "trainers": trainers,
+    "member_count": members.count(),
+    "trainer_count": trainers.count(),
+    "total_users": members.count() + trainers.count(),
+    }
+
+    return render(request, "memberships/home.html", context)

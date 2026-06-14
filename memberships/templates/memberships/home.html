@@ -1,0 +1,137 @@
+{% extends "memberships/layout.html" %}
+{% load static %}
+
+{% block title %}Home - Gym Management System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">✨ Gym Management</div>
+
+        <h1 class="hero-title">
+            Build your fitness journey<br>
+            with GymPro
+        </h1>
+
+        <p class="hero-subtitle">
+            Manage trainers and members in one organized platform.
+        </p>
+
+        <button class="hero-cta">Get Started →</button>
+    </div>
+</section>
+
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-number">{{ trainer_count }}</div>
+        <div class="stat-label">Professional Trainers</div>
+    </div>
+
+    <div class="stat-item">
+        <div class="stat-number">{{ member_count }}</div>
+        <div class="stat-label">Active Members</div>
+    </div>
+
+    <div class="stat-item">
+        <div class="stat-number">{{ total_users }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+</div>
+
+<!-- Trainers -->
+
+<section>
+    <h2 class="section-title">🏋️ Meet Our Trainers</h2>
+    <p class="section-subtitle">
+        {{ trainer_count }} certified professionals ready to help.
+    </p>
+
+    {% if trainers %}
+        <div class="showcase-grid">
+            {% for trainer in trainers %}
+                <div class="showcase-card">
+                    <div class="card-header">🏋️</div>
+
+                    <div class="card-content">
+                        <div class="card-name">
+                            {{ trainer.user.first_name }} {{ trainer.user.last_name }}
+                        </div>
+
+                        <div class="card-email">
+                            {{ trainer.user.email }}
+                        </div>
+
+                        <div class="card-detail">
+                            <strong>Experience:</strong>
+                            {{ trainer.years_of_experience }} years
+                        </div>
+
+                        <div class="card-detail">
+                            <strong>Salary:</strong>
+                            ${{ trainer.salary }}
+                        </div>
+
+                        <div class="card-badges">
+                            <span class="credit-badge trainer">Trainer</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">🏋️</div>
+            <div class="empty-state-text">
+                No trainers available.
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<!-- Members -->
+
+<section>
+    <h2 class="section-title">👥 Our Members</h2>
+
+    <p class="section-subtitle">
+        {{ member_count }} active members.
+    </p>
+
+    {% if members %}
+        <div class="showcase-grid">
+            {% for member in members %}
+                <div class="showcase-card">
+                    <div class="card-header">👥</div>
+
+                    <div class="card-content">
+                        <div class="card-name">
+                            {{ member.first_name }} {{ member.last_name }}
+                        </div>
+
+                        <div class="card-email">
+                            {{ member.email }}
+                        </div>
+
+                        <div class="card-badges">
+                            <span class="credit-badge member">Member</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">👥</div>
+            <div class="empty-state-text">
+                No members available.
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}
