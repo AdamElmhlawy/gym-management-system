@@ -1,25 +1,42 @@
 {% extends "memberships/layout.html" %}
 
+{% block title %}{% block admin_title %}Admin Panel{% endblock %} - GymPro{% endblock %}
+
 {% block content %}
 
-<div class="admin-shell">
-
-    <!-- SIDEBAR -->
+<div class="admin-layout">
+    <!-- Sidebar Navigation -->
     <aside class="admin-sidebar">
-        <div class="sidebar-title">Admin Panel</div>
-
-        <a href="{% url 'admin-dashboard' %}" class="sidebar-link">Dashboard</a>
-        <a href="{% url 'admin-user' %}" class="sidebar-link">Users</a>
-        <a href="{% url 'admin-trainer' %}" class="sidebar-link">Trainers</a>
-        <a href="{% url 'admin-branch-plan' %}" class="sidebar-link">Branches & Plans</a>
-
+        <nav class="admin-nav">
+            <a href="{% url 'admin-dashboard' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-dashboard' %}is-active{% endif %}">
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="{% url 'admin-user' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-user' %}is-active{% endif %}">
+                <span class="nav-label">Users</span>
+            </a>
+            <a href="{% url 'admin-trainer' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-trainer' %}is-active{% endif %}">
+                <span class="nav-label">Trainers</span>
+            </a>
+            <a href="{% url 'admin-branch-plan' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-branch-plan' %}is-active{% endif %}">
+                <span class="nav-label">Branches & Plans</span>
+            </a>
+        </nav>
     </aside>
 
-    <!-- CONTENT -->
-    <section class="admin-content">
-        {% block admin_content %}{% endblock %}
-    </section>
+    <!-- Main Content Area -->
+    <main class="admin-main">
+        <section class="admin-hero">
+            <div>
+                <div class="hero-badge">{% block hero_badge %}Admin Control{% endblock %}</div>
+                <h1 class="admin-title">{% block hero_title %}GymPro operations panel{% endblock %}</h1>
+                <p class="admin-copy">
+                    {% block hero_copy %}Manage members, trainers, branches, and plans from one focused workspace.{% endblock %}
+                </p>
+            </div>
+        </section>
 
+        {% block content_sections %}{% endblock %}
+    </main>
 </div>
 
 {% endblock %}

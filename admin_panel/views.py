@@ -136,7 +136,7 @@ class PromoteMemberView(LoginAdminRequiredMixin, View):
         user.role = "admin"
         user.save()
 
-        return redirect("admin-panel")
+        return redirect("admin-user")
 
 
 class HireTrainerView(LoginAdminRequiredMixin, View):
@@ -148,7 +148,7 @@ class HireTrainerView(LoginAdminRequiredMixin, View):
         trainer_profile.is_fired = False
         trainer_profile.save()
 
-        return redirect("admin-panel")
+        return redirect("admin-trainer")
 
 
 class FireTrainerView(LoginAdminRequiredMixin, View):
@@ -160,20 +160,20 @@ class FireTrainerView(LoginAdminRequiredMixin, View):
         trainer_profile.is_fired = True
         trainer_profile.save()
 
-        return redirect("admin-panel")
+        return redirect("admin-trainer")
 
 
 class BranchCreateView(LoginAdminRequiredMixin, CreateView):
     model = Branch
     fields = ["branch_name", "city"]
     template_name = "admin_panel/admin_panel.html"
-    success_url = reverse_lazy("admin-panel")
+    success_url = reverse_lazy("admin-branch-plan")
 
 
 class BranchDeleteView(LoginAdminRequiredMixin, DeleteView):
     model = Branch
     template_name = "admin_panel/admin_panel.html"
-    success_url = reverse_lazy("admin-panel")
+    success_url = reverse_lazy("admin-branch-plan")
 
 
 class PlanCreateView(LoginAdminRequiredMixin, CreateView):
@@ -184,10 +184,10 @@ class PlanCreateView(LoginAdminRequiredMixin, CreateView):
               "number_of_jacuzzi_sessions"]
     
     template_name = "admin_panel/admin_panel.html"
-    success_url = reverse_lazy("admin-panel")
+    success_url = reverse_lazy("admin-branch-plan")
 
 
 class PlanDeleteView(LoginAdminRequiredMixin, DeleteView):
     model = Plan
     template_name = "admin_panel/admin_panel.html"
-    success_url = reverse_lazy("admin-panel")
+    success_url = reverse_lazy("admin-branch-plan")
