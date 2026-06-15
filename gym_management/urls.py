@@ -21,9 +21,9 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("memberships.urls")),
+    path('', include("members.urls")),
     path('users/', include("users.urls")),
-    path('admin-dashboard/', include("admin_panel.urls"))
+    path('admins/', include("admins.urls"))
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,189 @@
+{% extends "admins/admin_base.html" %}
+
+{% block admin_title %}Branches & Plans{% endblock %}
+{% block hero_title %}Branches & Plans Management{% endblock %}
+{% block hero_copy %}Create and manage gym branches and membership plans.{% endblock %}
+
+{% block content_sections %}
+
+<div class="admin-stats">
+    <div class="stat-item">
+        <div class="stat-number">{{ branch_count }}</div>
+        <div class="stat-label">Branches</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ plan_count }}</div>
+        <div class="stat-label">Plans</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">${{ plan_income }}</div>
+        <div class="stat-label">Plan Income</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">${{ branch_salaries }}</div>
+        <div class="stat-label">Total Salaries</div>
+    </div>
+</div>
+
+<section class="admin-section admin-management-grid">
+    <div class="admin-panel-card">
+        <div class="admin-section-heading">
+            <div>
+                <h2 class="section-title">Branches</h2>
+                <p class="section-subtitle">Create and remove gym locations.</p>
+            </div>
+        </div>
+
+        <form action="{% url 'create-branch' %}" method="post" class="admin-form">
+            {% csrf_token %}
+            <div class="form-field">
+                <label for="branch-name">Branch name</label>
+                <input id="branch-name" type="text" name="branch_name" required>
+            </div>
+            <div class="form-field">
+                <label for="branch-city">City</label>
+                <select id="branch-city" name="city" required>
+                    <option value="">Select a city</option>
+                    <option value="tanta">Tanta</option>
+                    <option value="cairo">Cairo</option>
+                    <option value="alexandria">Alexandria</option>
+                    <option value="mansura">Mansura</option>
+                    <option value="suez">Suez</option>
+                    <option value="north_sinai">North Sinai</option>
+                    <option value="boston">Boston</option>
+                    <option value="london">London</option>
+                    <option value="berlin">Berlin</option>
+                    <option value="barcelona">Barcelona</option>
+                    <option value="moscow">Moscow</option>
+                    <option value="stockholm">Stockholm</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Create Branch</button>
+        </form>
+
+        <div class="admin-list">
+            {% for branch in branches %}
+                <div class="admin-list-item">
+                    <div>
+                        <strong>{{ branch.branch_name }}</strong>
+                        <span>{{ branch.get_city_display }}</span>
+                    </div>
+                    <form action="{% url 'delete-branch' branch.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="icon-action danger-action">Delete</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p class="admin-empty-copy">No branches yet. Create one to get started!</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="admin-panel-card">
+        <div class="admin-section-heading">
+            <div>
+                <h2 class="section-title">Plans</h2>
+                <p class="section-subtitle">Build membership offers for branches.</p>
+            </div>
+        </div>
+
+        <form action="{% url 'create-plan' %}" method="post" class="admin-form plan-form">
+            {% csrf_token %}
+            <div class="form-field">
+                <label for="plan-name">Plan name</label>
+                <input id="plan-name" type="text" name="plan_name" required>
+            </div>
+            <div class="form-field">
+                <label for="plan-branch">Branch</label>
+                <select id="plan-branch" name="branch" required>
+                    <option value="">Select a branch</option>
+                    {% for branch in branches %}
+                        <option value="{{ branch.id }}">{{ branch.branch_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="plan-price">Price ($)</label>
+                <input id="plan-price" type="number" name="price" min="0" step="0.01" required>
+            </div>
+            <div class="form-field">
+                <label for="plan-duration">Duration</label>
+                <select id="plan-duration" name="duration" required>
+                    <option value="">Select duration</option>
+                    <option value="one_month">One month</option>
+                    <option value="three_months">Three months</option>
+                    <option value="six_months">Six months</option>
+                    <option value="twelve_months">Twelve months</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label for="plan-sessions">Gym Sessions</label>
+                <input id="plan-sessions" type="number" name="number_of_sessions" min="0" value="10" required>
+            </div>
+            <div class="form-field">
+                <label for="plan-spa">Spa Sessions</label>
+                <input id="plan-spa" type="number" name="number_of_spa_sessions" min="0" value="0">
+            </div>
+            <div class="form-field">
+                <label for="plan-sauna">Sauna Sessions</label>
+                <input id="plan-sauna" type="number" name="number_of_suana_sessions" min="0" value="0">
+            </div>
+            <div class="form-field">
+                <label for="plan-jacuzzi">Jacuzzi Sessions</label>
+                <input id="plan-jacuzzi" type="number" name="number_of_jacuzzi_sessions" min="0" value="0">
+            </div>
+            <button type="submit" class="submit-button">Create Plan</button>
+        </form>
+
+        <div class="admin-list">
+            {% for plan in plans %}
+                <div class="admin-list-item">
+                    <div>
+                        <strong>{{ plan.plan_name }}</strong>
+                        <span>{{ plan.branch.branch_name }} • {{ plan.get_duration_display }} • ${{ plan.price }}</span>
+                    </div>
+                    <form action="{% url 'delete-plan' plan.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="icon-action danger-action">Delete</button>
+                    </form>
+                </div>
+            {% empty %}
+                <p class="admin-empty-copy">No plans yet. Create one to get started!</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if branchs_income %}
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Branch Income Overview</h2>
+            <p class="section-subtitle">Revenue generated from each branch location.</p>
+        </div>
+    </div>
+
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Branch</th>
+                    <th>City</th>
+                    <th>Income</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for branch in branchs_income %}
+                    <tr>
+                        <td><strong>{{ branch.branch_name }}</strong></td>
+                        <td>{{ branch.get_city_display }}</td>
+                        <td>${{ branch.income|default:"0.00" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

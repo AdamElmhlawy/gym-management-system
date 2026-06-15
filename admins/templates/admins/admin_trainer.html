@@ -1,0 +1,213 @@
+{% extends "admins/admin_base.html" %}
+
+{% block admin_title %}Trainer Management{% endblock %}
+{% block hero_title %}Trainer Management{% endblock %}
+{% block hero_copy %}Manage trainer hiring, firing, and salary information.{% endblock %}
+
+{% block content_sections %}
+
+<div class="admin-stats">
+    <div class="stat-item">
+        <div class="stat-number">{{ active_trainer_count }}</div>
+        <div class="stat-label">Active Trainers</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ pending_trainer_count }}</div>
+        <div class="stat-label">Pending</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ fired_trainer_count }}</div>
+        <div class="stat-label">Fired</div>
+    </div>
+</div>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Active Trainers</h2>
+            <p class="section-subtitle">Normal trainers who can currently work with members.</p>
+        </div>
+    </div>
+
+    {% if active_trainers %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in active_trainers %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if trainer.user.user_information.profile_pic %}
+                                        <img src="{{ trainer.user.user_information.profile_pic.url }}" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ trainer.user.get_full_name|default:trainer.user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ trainer.user.email }}</td>
+                            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+                            <td>{{ trainer.user.user_information.phone_number }}</td>
+                            <td>{{ trainer.user.user_information.get_gender_display }}</td>
+                            <td>{{ trainer.years_of_experience }} years</td>
+                            <td>${{ trainer.salary }}</td>
+                            <td>
+                                <form action="{% url 'fire-trainer' trainer.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action danger-action">Fire</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">AT</div>
+                <div class="empty-state-text">No active trainers found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Pending Trainers</h2>
+            <p class="section-subtitle">Trainers waiting for approval to work with members.</p>
+        </div>
+    </div>
+
+    {% if pending_trainers %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in pending_trainers %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if trainer.user.user_information.profile_pic %}
+                                        <img src="{{ trainer.user.user_information.profile_pic.url }}" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ trainer.user.get_full_name|default:trainer.user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ trainer.user.email }}</td>
+                            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+                            <td>{{ trainer.user.user_information.phone_number }}</td>
+                            <td>{{ trainer.user.user_information.get_gender_display }}</td>
+                            <td>{{ trainer.years_of_experience }} years</td>
+                            <td>${{ trainer.salary }}</td>
+                            <td>
+                                <form action="{% url 'accept-trainer' trainer.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action">Hire</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">PN</div>
+                <div class="empty-state-text">No pending trainers found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Fired Trainers</h2>
+            <p class="section-subtitle">Previously removed trainers with an option to rehire.</p>
+        </div>
+    </div>
+
+    {% if fired_trainers %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in fired_trainers %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if trainer.user.user_information.profile_pic %}
+                                        <img src="{{ trainer.user.user_information.profile_pic.url }}" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ trainer.user.get_full_name|default:trainer.user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ trainer.user.email }}</td>
+                            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+                            <td>{{ trainer.user.user_information.phone_number }}</td>
+                            <td>{{ trainer.user.user_information.get_gender_display }}</td>
+                            <td>{{ trainer.years_of_experience }} years</td>
+                            <td>${{ trainer.salary }}</td>
+                            <td>
+                                <form action="{% url 'accept-trainer' trainer.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action">Hire Again</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">FR</div>
+                <div class="empty-state-text">No fired trainers found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}

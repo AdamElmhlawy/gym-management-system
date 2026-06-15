@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    'memberships',
-    'admin_panel',
+    'members',
+    'admins',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'gym_management.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'gym_management_system',
+        'NAME': 'gym_management.db',
         'USER': 'postgres',
         'PASSWORD': '22122008',
         'HOST': 'localhost',
