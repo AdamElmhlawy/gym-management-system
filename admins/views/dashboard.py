@@ -9,7 +9,7 @@ from members.models import MemberShip
 
 
 class AdminDashboardView(LoginAdminRequiredMixin, TemplateView):
-    template_name = "admin_panel/admin_dashboard.html"
+    template_name = "admins/dashboard.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

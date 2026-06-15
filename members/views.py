@@ -3,7 +3,7 @@ from .models import Branch, Plan
 from users.models import User, TrainerProfile
 
 class HomeListView(TemplateView):
-    template_name = "memberships/home.html"
+    template_name = "members/home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

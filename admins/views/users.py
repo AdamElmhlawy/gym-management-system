@@ -8,7 +8,7 @@ from users.models import User
 
 
 class AdminUserView(LoginAdminRequiredMixin, TemplateView):
-    template_name = "admin_panel/admin_user.html"
+    template_name = "admins/user.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

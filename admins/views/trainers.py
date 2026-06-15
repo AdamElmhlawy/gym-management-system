@@ -9,7 +9,7 @@ from users.models import User, TrainerProfile
 
 
 class AdminTrainerView(LoginAdminRequiredMixin, TemplateView):
-    template_name = "admin_panel/admin_trainer.html"
+    template_name = "admins/trainer.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
