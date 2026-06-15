@@ -1,0 +1,57 @@
+{% extends "memberships/layout.html" %}
+
+{% block title %}Trainers - Admin Panel{% endblock %}
+
+{% block content %}
+
+<section class="admin-hero">
+    <div>
+        <div class="hero-badge">Trainer Management</div>
+        <h1 class="admin-title">Control trainer lifecycle</h1>
+        <p class="admin-copy">
+            Hire, fire, and manage trainer status across the system.
+        </p>
+    </div>
+</section>
+
+<div class="admin-stats">
+    <div class="stat-item">
+        <div class="stat-number">{{ trainer_count }}</div>
+        <div class="stat-label">Total Trainers</div>
+    </div>
+
+    <div class="stat-item">
+        <div class="stat-number">{{ active_trainer_count }}</div>
+        <div class="stat-label">Active</div>
+    </div>
+
+    <div class="stat-item">
+        <div class="stat-number">{{ pending_trainer_count }}</div>
+        <div class="stat-label">Pending</div>
+    </div>
+
+    <div class="stat-item">
+        <div class="stat-number">{{ fired_trainer_count }}</div>
+        <div class="stat-label">Fired</div>
+    </div>
+</div>
+
+<!-- ACTIVE -->
+<section class="admin-section">
+    <h2 class="section-title">Active Trainers</h2>
+    {% include "admin_panel/_trainer_table.html" with trainers=active_trainers action="fire" %}
+</section>
+
+<!-- PENDING -->
+<section class="admin-section">
+    <h2 class="section-title">Pending Trainers</h2>
+    {% include "admin_panel/_trainer_table.html" with trainers=pending_trainers action="hire" %}
+</section>
+
+<!-- FIRED -->
+<section class="admin-section">
+    <h2 class="section-title">Fired Trainers</h2>
+    {% include "admin_panel/_trainer_table.html" with trainers=fired_trainers action="rehire" %}
+</section>
+
+{% endblock %}

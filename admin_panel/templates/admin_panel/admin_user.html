@@ -1,0 +1,108 @@
+{% extends "memberships/layout.html" %}
+
+{% block title %}Users - Admin Panel{% endblock %}
+
+{% block content %}
+
+<section class="admin-hero">
+    <div>
+        <div class="hero-badge">User Management</div>
+        <h1 class="admin-title">Admins & Members</h1>
+        <p class="admin-copy">
+            Control user roles and promote members to admin access.
+        </p>
+    </div>
+</section>
+
+<div class="admin-stats">
+    <div class="stat-item">
+        <div class="stat-number">{{ admin_count }}</div>
+        <div class="stat-label">Admins</div>
+    </div>
+
+    <div class="stat-item">
+        <div class="stat-number">{{ member_count }}</div>
+        <div class="stat-label">Members</div>
+    </div>
+</div>
+
+<!-- ADMINS -->
+<section class="admin-section">
+    <h2 class="section-title">Admins</h2>
+
+    {% if admins %}
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Admin</th>
+                    <th>Email</th>
+                    <th>Branch</th>
+                    <th>Phone</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin_user in admins %}
+                <tr>
+                    <td class="admin-person">
+                        <img src="{{ admin_user.user_information.profile_pic.url }}">
+                        <span>{{ admin_user.username }}</span>
+                    </td>
+                    <td>{{ admin_user.email }}</td>
+                    <td>{{ admin_user.user_information.branch.branch_name }}</td>
+                    <td>{{ admin_user.user_information.phone_number }}</td>
+                    <td>{{ admin_user.user_information.get_gender_display }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</section>
+
+<!-- MEMBERS -->
+<section class="admin-section">
+    <h2 class="section-title">Members</h2>
+
+    {% if members %}
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Email</th>
+                    <th>Branch</th>
+                    <th>Phone</th>
+                    <th>Gender</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for member in members %}
+                <tr>
+                    <td class="admin-person">
+                        <img src="{{ member.user_information.profile_pic.url }}">
+                        <span>{{ member.username }}</span>
+                    </td>
+                    <td>{{ member.email }}</td>
+                    <td>{{ member.user_information.branch.branch_name }}</td>
+                    <td>{{ member.user_information.phone_number }}</td>
+                    <td>{{ member.user_information.get_gender_display }}</td>
+                    <td>
+                        <form method="post" action="{% url 'promote-member' member.id %}">
+                            {% csrf_token %}
+                            <button class="table-action">Promote</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}

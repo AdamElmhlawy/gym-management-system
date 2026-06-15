@@ -1,0 +1,25 @@
+{% extends "memberships/layout.html" %}
+
+{% block content %}
+
+<div class="admin-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-title">Admin Panel</div>
+
+        <a href="{% url 'admin-dashboard' %}" class="sidebar-link">Dashboard</a>
+        <a href="{% url 'admin-user' %}" class="sidebar-link">Users</a>
+        <a href="{% url 'admin-trainer' %}" class="sidebar-link">Trainers</a>
+        <a href="{% url 'admin-branch-plan' %}" class="sidebar-link">Branches & Plans</a>
+
+    </aside>
+
+    <!-- CONTENT -->
+    <section class="admin-content">
+        {% block admin_content %}{% endblock %}
+    </section>
+
+</div>
+
+{% endblock %}

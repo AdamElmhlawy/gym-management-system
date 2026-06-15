@@ -1,25 +1,20 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
 from .models import Branch, Plan
 from users.models import User, TrainerProfile
 
+class HomeListView(TemplateView):
+    template_name = "memberships/home.html"
 
-def home_view(request):
-    members = User.objects.filter(role="member").select_related("user_information")
-    trainers = TrainerProfile.objects.select_related("user", "user__user_information")
-    branches = Branch.objects.all()
-    plans = Plan.objects.select_related("branch")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["members"] = User.objects.filter(role="member").select_related("user_information")
+        context["trainers"] = TrainerProfile.objects.select_related("user", "user__user_information")
+        context["branches"] = Branch.objects.all()
+        context["plans"] = Plan.objects.select_related("branch")
+        context["member_count"] = context["members"].count()
+        context["trainer_count"] = context["trainers"].count()
+        context["branch_count"] = context["branches"].count()
+        context["plan_count"] = context["plans"].count()
+        context["total_users"] = context["trainer_count"] + context["member_count"]
 
-    context = {
-        "members": members,
-        "trainers": trainers,
-        "branches": branches,
-        "plans": plans,
-        "member_count": members.count(),
-        "trainer_count": trainers.count(),
-        "branch_count": branches.count(),
-        "plan_count": plans.count(),
-        "total_users": members.count() + trainers.count(),
-    }
-
-    return render(request, "memberships/home.html", context)
-
+        return context

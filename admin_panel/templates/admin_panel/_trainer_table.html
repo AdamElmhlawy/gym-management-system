@@ -1,0 +1,51 @@
+<div class="admin-table-wrap">
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>Trainer</th>
+            <th>Email</th>
+            <th>Branch</th>
+            <th>Phone</th>
+            <th>Experience</th>
+            <th>Salary</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for trainer in trainers %}
+        <tr>
+            <td class="admin-person">
+                <img src="{{ trainer.user.user_information.profile_pic.url }}">
+                <span>{{ trainer.user.username }}</span>
+            </td>
+            <td>{{ trainer.user.email }}</td>
+            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+            <td>{{ trainer.user.user_information.phone_number }}</td>
+            <td>{{ trainer.years_of_experience }} yrs</td>
+            <td>${{ trainer.salary }}</td>
+            <td>
+                {% if action == "fire" %}
+                <form method="post" action="{% url 'fire-trainer' trainer.user.id %}">
+                    {% csrf_token %}
+                    <button class="table-action danger-action">Fire</button>
+                </form>
+
+                {% elif action == "hire" %}
+                <form method="post" action="{% url 'accept-trainer' trainer.user.id %}">
+                    {% csrf_token %}
+                    <button class="table-action">Hire</button>
+                </form>
+
+                {% else %}
+                <form method="post" action="{% url 'accept-trainer' trainer.user.id %}">
+                    {% csrf_token %}
+                    <button class="table-action">Rehire</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
