@@ -1,59 +1,82 @@
 from django.contrib import admin
-from .models import (
-    User,
-    UserInformation,
-    TrainerProfile,
-    MemberTrainer,
-)
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import User, UserInformation, TrainerProfile, MemberTrainer
 
 
-# USER INFORMATION INLINE
 class UserInformationInline(admin.StackedInline):
     model = UserInformation
     can_delete = False
-    verbose_name_plural = "User Information"
-    fields = ("profile_pic", "phone_number", "gender", "date_of_birth", "branch")
+    extra = 0
+    fields = (
+        "profile_pic",
+        "phone_number",
+        "gender",
+        "date_of_birth",
+        "branch",
+    )
+    autocomplete_fields = ("branch",)
 
 
-# USER ADMIN
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ("username", "email", "role", "is_staff")
+class UserAdmin(BaseUserAdmin):
+    list_display = ("username", "email", "role", "is_staff", "is_active")
     search_fields = ("username", "email")
-    list_filter = ("role",)
+    list_filter = ("role", "is_staff", "is_active")
+
+    ordering = ("username",)
 
     fieldsets = (
-        ("Account Info", {
+        ("Account", {
             "fields": ("username", "email", "password")
         }),
-        ("Role & Permissions", {
+        ("Role & Status", {
             "fields": ("role", "is_staff", "is_active")
+        }),
+        ("Permissions", {
+            "fields": ("groups", "user_permissions")
         }),
     )
 
     inlines = [UserInformationInline]
 
 
-# TRAINER PROFILE ADMIN
 @admin.register(TrainerProfile)
 class TrainerProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "salary", "years_of_experience")
+    list_display = (
+        "user",
+        "salary",
+        "years_of_experience",
+        "is_active",
+        "is_fired",
+    )
+
+    list_filter = ("is_active", "is_fired", "years_of_experience")
     search_fields = ("user__username",)
-    list_filter = ("years_of_experience",)
+
+    autocomplete_fields = ("user",)
+
+    ordering = ("-years_of_experience",)
 
     fieldsets = (
-        ("Trainer Info", {
-            "fields": ("user", "salary", "years_of_experience")
+        ("Trainer Status", {
+            "fields": ("user", "is_active", "is_fired")
+        }),
+        ("Professional Info", {
+            "fields": ("salary", "years_of_experience")
         }),
     )
 
 
-# MEMBER - TRAINER RELATION
 @admin.register(MemberTrainer)
 class MemberTrainerAdmin(admin.ModelAdmin):
     list_display = ("member", "trainer", "assigned_date", "is_active")
+
     list_filter = ("is_active",)
     search_fields = ("member__username", "trainer__username")
+
+    autocomplete_fields = ("member", "trainer")
+
+    ordering = ("-assigned_date",)
 
     fieldsets = (
         ("Assignment", {

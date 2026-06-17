@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.urls import reverse_lazy
 
@@ -19,6 +20,12 @@ class AdminBranchPlanView(LoginAdminRequiredMixin, TemplateView):
         branches = Branch.objects.all()
         plans = Plan.objects.select_related("branch")
 
+        # pagination changes for branch_plan
+        branch_page_number = self.request.GET.get("branch_page")
+        plan_page_number = self.request.GET.get("plan_page")
+        branches = Paginator(branches, 10).get_page(branch_page_number)
+        plans = Paginator(plans, 10).get_page(plan_page_number)
+
         branches_income_qs = Branch.objects.annotate(
             income=Sum(
                 "user_branch__user__member_memberships__amount_paid"
@@ -34,7 +41,7 @@ class AdminBranchPlanView(LoginAdminRequiredMixin, TemplateView):
 
         context.update({
             "branches": branches, "plans": plans, "plan_income": plan_income,
-            "branch_count": branches.count(), "plan_count": plans.count(),
+            "branch_count": branches.paginator.count, "plan_count": plans.paginator.count,
             "branchs_income": branches_income_qs, "branch_salaries": branch_salaries,
         })
 

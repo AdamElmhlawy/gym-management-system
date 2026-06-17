@@ -59,6 +59,18 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="admin-pagination">
+            <div class="pagination-info">Showing {{ admins.start_index }}–{{ admins.end_index }} of {{ admins.paginator.count }}</div>
+            <div class="pagination-actions">
+                {% if admins.has_previous %}
+                    <a href="?admin_page={{ admins.previous_page_number }}{% if request.GET.member_page %}&member_page={{ request.GET.member_page }}{% endif %}" class="pagination-btn">Previous</a>
+                {% endif %}
+                {% if admins.has_next %}
+                    <a href="?admin_page={{ admins.next_page_number }}{% if request.GET.member_page %}&member_page={{ request.GET.member_page }}{% endif %}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
+        </div>
     {% else %}
         <div class="empty-state">
             <div>
@@ -117,6 +129,18 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+        <div class="admin-pagination">
+            <div class="pagination-info">Showing {{ members.start_index }}–{{ members.end_index }} of {{ members.paginator.count }}</div>
+            <div class="pagination-actions">
+                {% if members.has_previous %}
+                    <a href="?member_page={{ members.previous_page_number }}{% if request.GET.admin_page %}&admin_page={{ request.GET.admin_page }}{% endif %}" class="pagination-btn">Previous</a>
+                {% endif %}
+                {% if members.has_next %}
+                    <a href="?member_page={{ members.next_page_number }}{% if request.GET.admin_page %}&admin_page={{ request.GET.admin_page }}{% endif %}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
         </div>
     {% else %}
         <div class="empty-state">

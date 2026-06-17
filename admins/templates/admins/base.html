@@ -14,8 +14,14 @@
             <a href="{% url 'admin-user' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-user' %}is-active{% endif %}">
                 <span class="nav-label">Users</span>
             </a>
-            <a href="{% url 'admin-trainer' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-trainer' %}is-active{% endif %}">
-                <span class="nav-label">Trainers</span>
+            <a href="{% url 'admin-active-trainer' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-active-trainer' %}is-active{% endif %}">
+                <span class="nav-label">Active Trainers</span>
+            </a>
+            <a href="{% url 'admin-fired-trainer' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-fired-trainer' %}is-active{% endif %}">
+                <span class="nav-label">Fired Trainers</span>
+            </a>
+            <a href="{% url 'admin-pending-trainer' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-pending-trainer' %}is-active{% endif %}">
+                <span class="nav-label">Pending Trainers</span>
             </a>
             <a href="{% url 'admin-branch-plan' %}" class="admin-nav-item {% if request.resolver_match.url_name == 'admin-branch-plan' %}is-active{% endif %}">
                 <span class="nav-label">Branches & Plans</span>

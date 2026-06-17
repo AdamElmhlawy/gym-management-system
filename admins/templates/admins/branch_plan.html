@@ -15,14 +15,15 @@
         <div class="stat-number">{{ plan_count }}</div>
         <div class="stat-label">Plans</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item stat-inline">
         <div class="stat-number">${{ plan_income }}</div>
         <div class="stat-label">Plan Income</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item stat-inline">
         <div class="stat-number">${{ branch_salaries }}</div>
         <div class="stat-label">Total Salaries</div>
     </div>
+
 </div>
 
 <section class="admin-section admin-management-grid">
@@ -77,6 +78,20 @@
                 <p class="admin-empty-copy">No branches yet. Create one to get started!</p>
             {% endfor %}
         </div>
+
+        {% if branches.has_other_pages %}
+        <div class="admin-pagination">
+            <div class="pagination-info">Showing {{ branches.start_index }}–{{ branches.end_index }} of {{ branches.paginator.count }}</div>
+            <div class="pagination-actions">
+                {% if branches.has_previous %}
+                    <a href="?branch_page={{ branches.previous_page_number }}{% if request.GET.plan_page %}&plan_page={{ request.GET.plan_page }}{% endif %}" class="pagination-btn">Previous</a>
+                {% endif %}
+                {% if branches.has_next %}
+                    <a href="?branch_page={{ branches.next_page_number }}{% if request.GET.plan_page %}&plan_page={{ request.GET.plan_page }}{% endif %}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <div class="admin-panel-card">
@@ -151,6 +166,20 @@
                 <p class="admin-empty-copy">No plans yet. Create one to get started!</p>
             {% endfor %}
         </div>
+
+        {% if plans.has_other_pages %}
+        <div class="admin-pagination">
+            <div class="pagination-info">Showing {{ plans.start_index }}–{{ plans.end_index }} of {{ plans.paginator.count }}</div>
+            <div class="pagination-actions">
+                {% if plans.has_previous %}
+                    <a href="?plan_page={{ plans.previous_page_number }}{% if request.GET.branch_page %}&branch_page={{ request.GET.branch_page }}{% endif %}" class="pagination-btn">Previous</a>
+                {% endif %}
+                {% if plans.has_next %}
+                    <a href="?plan_page={{ plans.next_page_number }}{% if request.GET.branch_page %}&branch_page={{ request.GET.branch_page }}{% endif %}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
     </div>
 </section>
 

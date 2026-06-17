@@ -11,11 +11,11 @@
         <div class="stat-number">{{ total_users }}</div>
         <div class="stat-label">Total Users</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item stat-inline">
         <div class="stat-number">${{ total_income }}</div>
         <div class="stat-label">Total Income</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item stat-inline">
         <div class="stat-number">${{ total_salaries }}</div>
         <div class="stat-label">Trainer Salaries</div>
     </div>
@@ -34,7 +34,7 @@
             <div class="stat-number">USERS</div>
             <div class="stat-label">Manage Users</div>
         </a>
-        <a href="{% url 'admin-trainer' %}" class="admin-action-card">
+        <a href="{% url 'admin-active-trainer' %}" class="admin-action-card">
             <div class="stat-number">TRAINERS</div>
             <div class="stat-label">Manage Trainers</div>
         </a>

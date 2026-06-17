@@ -734,19 +734,53 @@ section {
 }
 
 .admin-stats {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 3rem;
+    align-items: flex-start;
 }
 
 .admin-stats .stat-item {
-    min-height: 118px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: auto;
+    min-width: 0;
+    max-width: max-content;
 }
 
 .admin-stats .stat-number {
-    font-size: clamp(1.45rem, 2.4vw, 2.2rem);
-    word-break: break-word;
+    font-size: clamp(1.1rem, 2vw, 1.8rem);
+    white-space: nowrap;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.admin-stats .stat-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.85rem;
+}
+
+/* Inline variant for monetary/compact stats (number + label on one line) */
+.admin-stats .stat-item.stat-inline {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    align-items: baseline;
+    min-height: auto;
+}
+.admin-stats .stat-item.stat-inline .stat-number {
+    font-size: clamp(0.95rem, 1.6vw, 1.4rem);
+    flex: 0 0 auto;
+}
+.admin-stats .stat-item.stat-inline .stat-label {
+    margin-top: 0;
+    flex: 0 0 auto;
 }
 
 .admin-action-grid {
@@ -823,6 +857,12 @@ section {
     color: var(--muted);
     text-align: left;
     vertical-align: middle;
+}
+
+.admin-table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .admin-table th {
@@ -1099,7 +1139,10 @@ section {
     }
 
     .admin-stats {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-start;
     }
 
     .admin-management-grid {
@@ -1169,7 +1212,25 @@ section {
     }
 
     .admin-stats {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .admin-stats .stat-item {
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 0;
+        max-width: max-content;
+    }
+
+    .admin-stats .stat-number {
+        white-space: nowrap !important;
     }
 
     .admin-section-heading,
@@ -1329,6 +1390,10 @@ section {
 .pagination-info {
     color: var(--muted);
     font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
 }
 
 .pagination-btn {

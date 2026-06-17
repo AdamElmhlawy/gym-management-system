@@ -1,0 +1,91 @@
+{% extends "admins/base.html" %}
+
+{% block admin_title %}Fired Trainers{% endblock %}
+{% block hero_title %}Fired Trainers{% endblock %}
+{% block hero_copy %}Previously removed trainers who may be rehired later.{% endblock %}
+
+{% block content_sections %}
+
+<div class="admin-stats">
+    <div class="stat-item">
+        <div class="stat-number">{{ fired_trainers_count }}</div>
+        <div class="stat-label">Fired Trainers</div>
+    </div>
+</div>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Fired Trainers</h2>
+            <p class="section-subtitle">Previously removed trainers with an option to rehire.</p>
+        </div>
+    </div>
+
+    {% if fired_trainers %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in fired_trainers %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if trainer.user.user_information.profile_pic %}
+                                        <img src="{{ trainer.user.user_information.profile_pic.url }}" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ trainer.user.get_full_name|default:trainer.user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ trainer.user.email }}</td>
+                            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+                            <td>{{ trainer.user.user_information.phone_number }}</td>
+                            <td>{{ trainer.user.user_information.get_gender_display }}</td>
+                            <td>{{ trainer.years_of_experience }} years</td>
+                            <td>${{ trainer.salary }}</td>
+                            <td>
+                                <form action="{% url 'accept-trainer' trainer.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action">Hire Again</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="admin-pagination">
+            <div class="pagination-info">Showing {{ fired_trainers.start_index }}–{{ fired_trainers.end_index }} of {{ fired_trainers.paginator.count }}</div>
+            <div class="pagination-actions">
+                {% if fired_trainers.has_previous %}
+                    <a href="?page={{ fired_trainers.previous_page_number }}" class="pagination-btn">Previous</a>
+                {% endif %}
+                {% if fired_trainers.has_next %}
+                    <a href="?page={{ fired_trainers.next_page_number }}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">FR</div>
+                <div class="empty-state-text">No fired trainers found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}

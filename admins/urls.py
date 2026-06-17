@@ -1,12 +1,15 @@
 from django.urls import path
-from .views import (AdminDashboardView, AdminUserView, AdminTrainerView, AdminBranchPlanView,
+from .views import (AdminDashboardView, AdminUserView, AdminBranchPlanView,
+                    AdminActiveTrainerView, AdminFiredTrainerView, AdminPendingTrainerView,
                     PromoteMemberView, HireTrainerView, FireTrainerView, 
                     BranchCreateView, BranchDeleteView, PlanCreateView, PlanDeleteView)
 
 urlpatterns = [
     path("", AdminDashboardView.as_view(), name="admin-dashboard"),
     path("users/", AdminUserView.as_view(), name="admin-user"),
-    path("trainers/", AdminTrainerView.as_view(), name="admin-trainer"),
+    path("trainers/active", AdminActiveTrainerView.as_view(), name="admin-active-trainer"),
+    path("trainers/fired", AdminFiredTrainerView.as_view(), name="admin-fired-trainer"),
+    path("trainers/pending", AdminPendingTrainerView.as_view(), name="admin-pending-trainer"),
     path("branched-plans/", AdminBranchPlanView.as_view(), name="admin-branch-plan"),
 
     path("member/promote/<int:user_id>" , PromoteMemberView.as_view(), name="promote-member"),

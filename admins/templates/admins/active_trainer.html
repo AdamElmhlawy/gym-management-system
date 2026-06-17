@@ -1,0 +1,91 @@
+{% extends "admins/base.html" %}
+
+{% block admin_title %}Active Trainers{% endblock %}
+{% block hero_title %}Active Trainers{% endblock %}
+{% block hero_copy %}Trainers currently approved and working with members.{% endblock %}
+
+{% block content_sections %}
+
+<div class="admin-stats">
+    <div class="stat-item">
+        <div class="stat-number">{{ active_trainer_count }}</div>
+        <div class="stat-label">Active Trainers</div>
+    </div>
+</div>
+
+<section class="admin-section">
+    <div class="admin-section-heading">
+        <div>
+            <h2 class="section-title">Active Trainers</h2>
+            <p class="section-subtitle">Normal trainers who can currently work with members.</p>
+        </div>
+    </div>
+
+    {% if active_trainer %}
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Phone</th>
+                        <th>Gender</th>
+                        <th>Experience</th>
+                        <th>Salary</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trainer in active_trainer %}
+                        <tr>
+                            <td>
+                                <div class="admin-person">
+                                    {% if trainer.user.user_information.profile_pic %}
+                                        <img src="{{ trainer.user.user_information.profile_pic.url }}" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% else %}
+                                        <img src="/media/defaults/default_profile.png" alt="{{ trainer.user.get_full_name|default:trainer.user.username }} profile picture">
+                                    {% endif %}
+                                    <span>{{ trainer.user.get_full_name|default:trainer.user.username }}</span>
+                                </div>
+                            </td>
+                            <td>{{ trainer.user.email }}</td>
+                            <td>{{ trainer.user.user_information.branch.branch_name }}</td>
+                            <td>{{ trainer.user.user_information.phone_number }}</td>
+                            <td>{{ trainer.user.user_information.get_gender_display }}</td>
+                            <td>{{ trainer.years_of_experience }} years</td>
+                            <td>${{ trainer.salary }}</td>
+                            <td>
+                                <form action="{% url 'fire-trainer' trainer.user.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="table-action danger-action">Fire</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="admin-pagination">
+            <div class="pagination-info">Showing {{ active_trainer.start_index }}–{{ active_trainer.end_index }} of {{ active_trainer.paginator.count }}</div>
+            <div class="pagination-actions">
+                {% if active_trainer.has_previous %}
+                    <a href="?page={{ active_trainer.previous_page_number }}" class="pagination-btn">Previous</a>
+                {% endif %}
+                {% if active_trainer.has_next %}
+                    <a href="?page={{ active_trainer.next_page_number }}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div>
+                <div class="empty-state-icon">AT</div>
+                <div class="empty-state-text">No active trainers found.</div>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}

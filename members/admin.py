@@ -1,21 +1,15 @@
 from django.contrib import admin
 from .models import Branch, Plan, MemberShip, MemberShipUsage
 
-# BRANCH ADMIN
+
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
     list_display = ("branch_name", "city")
     search_fields = ("branch_name", "city")
     list_filter = ("city",)
-
-    fieldsets = (
-        ("Branch Info", {
-            "fields": ("branch_name", "city")
-        }),
-    )
+    ordering = ("branch_name",)
 
 
-# PLAN ADMIN
 @admin.register(Plan)
 class PlanAdmin(admin.ModelAdmin):
     list_display = (
@@ -31,23 +25,10 @@ class PlanAdmin(admin.ModelAdmin):
 
     list_filter = ("duration", "branch")
     search_fields = ("plan_name", "branch__branch_name")
-
-    fieldsets = (
-        ("Basic Info", {
-            "fields": ("plan_name", "branch", "price", "duration")
-        }),
-        ("Sessions", {
-            "fields": (
-                "number_of_sessions",
-                "number_of_spa_sessions",
-                "number_of_suana_sessions",
-                "number_of_jacuzzi_sessions",
-            )
-        }),
-    )
+    ordering = ("branch", "plan_name")
+    autocomplete_fields = ("branch",)
 
 
-# MEMBERSHIP ADMIN
 @admin.register(MemberShip)
 class MemberShipAdmin(admin.ModelAdmin):
     list_display = (
@@ -60,10 +41,13 @@ class MemberShipAdmin(admin.ModelAdmin):
         "end_date",
     )
 
-    list_filter = ("status", "payment_method")
+    list_filter = ("status", "payment_method", "plan__branch")
     search_fields = ("member__username", "plan__plan_name")
-
     readonly_fields = ("start_date", "end_date")
+
+    autocomplete_fields = ("member", "plan")
+
+    ordering = ("-start_date",)
 
     fieldsets = (
         ("Core Info", {
@@ -72,13 +56,12 @@ class MemberShipAdmin(admin.ModelAdmin):
         ("Payment", {
             "fields": ("amount_paid", "payment_method")
         }),
-        ("Dates", {
+        ("System Dates", {
             "fields": ("start_date", "end_date")
         }),
     )
 
 
-# MEMBERSHIP USAGE ADMIN
 @admin.register(MemberShipUsage)
 class MemberShipUsageAdmin(admin.ModelAdmin):
     list_display = (
@@ -90,3 +73,4 @@ class MemberShipUsageAdmin(admin.ModelAdmin):
     )
 
     search_fields = ("membership__member__username",)
+    autocomplete_fields = ("membership",)

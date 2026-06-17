@@ -102,6 +102,20 @@
                 </a>
             {% endfor %}
         </div>
+
+        <div class="admin-pagination">
+            <div class="pagination-info">
+                Showing {{ trainers.start_index }}–{{ trainers.end_index }} of {{ trainers.paginator.count }} trainers
+            </div>
+            <div class="pagination-actions">
+                {% if trainers.has_previous %}
+                    <a href="?trainer_page={{ trainers.previous_page_number }}{% if request.GET.member_page %}&member_page={{ request.GET.member_page }}{% endif %}" class="pagination-btn">Previous</a>
+                {% endif %}
+                {% if trainers.has_next %}
+                    <a href="?trainer_page={{ trainers.next_page_number }}{% if request.GET.member_page %}&member_page={{ request.GET.member_page }}{% endif %}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
+        </div>
     {% else %}
         <div class="empty-state">
             <div class="empty-state-icon">PT</div>
@@ -162,6 +176,20 @@
                     </div>
                 </a>
             {% endfor %}
+        </div>
+
+        <div class="admin-pagination">
+            <div class="pagination-info">
+                Showing {{ members.start_index }}–{{ members.end_index }} of {{ members.paginator.count }} members
+            </div>
+            <div class="pagination-actions">
+                {% if members.has_previous %}
+                    <a href="?member_page={{ members.previous_page_number }}{% if request.GET.trainer_page %}&trainer_page={{ request.GET.trainer_page }}{% endif %}" class="pagination-btn">Previous</a>
+                {% endif %}
+                {% if members.has_next %}
+                    <a href="?member_page={{ members.next_page_number }}{% if request.GET.trainer_page %}&trainer_page={{ request.GET.trainer_page }}{% endif %}" class="pagination-btn">Next</a>
+                {% endif %}
+            </div>
         </div>
     {% else %}
         <div class="empty-state">
