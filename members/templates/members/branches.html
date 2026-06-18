@@ -1,0 +1,78 @@
+{% extends "members/layout.html" %}
+
+{% block title %}Branches - GymPro{% endblock %}
+
+{% block content %}
+
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">Branches</div>
+        <h1 class="hero-title">All Branches</h1>
+        <p class="hero-subtitle">
+            Manage gym locations and their details.
+        </p>
+    </div>
+</section>
+
+<section class="admin-section">
+
+    {% for branch in branches %}
+        <div class="showcase-card person-button"
+             style="max-width: 720px; margin: 1rem auto;">
+
+            <div class="card-content" style="padding: 1.25rem;">
+
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+
+                    <div>
+                        <div class="card-name">
+                            {{ branch.branch_name }}
+                        </div>
+
+                        <div class="card-email">
+                            {{ branch.get_city_display }}
+                        </div>
+                    </div>
+
+                    {% if request.user.role == "admin" %}
+                        <div style="display:flex; gap:0.5rem;">
+                            <a href="#" class="pagination-btn">Edit</a>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+
+    {% empty %}
+        <p style="text-align:center; opacity:0.7;">
+            No branches available.
+        </p>
+    {% endfor %}
+
+    {% if is_paginated %}
+        <div style="display:flex; justify-content:center; gap:0.5rem; margin-top:1.5rem; align-items:center;">
+
+            {% if page_obj.has_previous %}
+                <a class="pagination-btn" href="?page={{ page_obj.previous_page_number }}">
+                    Previous
+                </a>
+            {% endif %}
+
+            <span style="padding:0.5rem 1rem;">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a class="pagination-btn" href="?page={{ page_obj.next_page_number }}">
+                    Next
+                </a>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+</section>
+
+{% endblock %}

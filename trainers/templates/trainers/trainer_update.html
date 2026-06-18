@@ -1,0 +1,85 @@
+{% extends "members/layout.html" %}
+
+{% block title %}Edit Trainer - GymPro{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+    <div class="auth-shell"
+         style="width: min(760px, 100%); grid-template-columns: 1fr; margin: 1.5rem auto;">
+
+        <form class="auth-panel signup-form"
+              method="post"
+              novalidate
+              style="width: 100%;">
+
+            {% csrf_token %}
+
+            <h2>Edit Trainer Profile</h2>
+
+            {% if form.non_field_errors %}
+                <div class="form-alert">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-section">
+
+                <div class="form-field">
+                    <label for="{{ form.years_of_experience.id_for_label }}">
+                        {{ form.years_of_experience.label }}
+                    </label>
+                    {{ form.years_of_experience }}
+                    {% for error in form.years_of_experience.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.salary.id_for_label }}">
+                        {{ form.salary.label }}
+                    </label>
+                    {{ form.salary }}
+                    {% for error in form.salary.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.is_active.id_for_label }}">
+                        {{ form.is_active.label }}
+                    </label>
+                    {{ form.is_active }}
+                    {% for error in form.is_active.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.is_fired.id_for_label }}">
+                        {{ form.is_fired.label }}
+                    </label>
+                    {{ form.is_fired }}
+                    {% for error in form.is_fired.errors %}
+                        <div class="field-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+                <button type="submit" class="submit-button">
+                    Save changes
+                </button>
+
+                <a href="{% url 'trainer-detail' trainer.user_id %}"
+                   class="pagination-btn"
+                   style="display:inline-flex; align-items:center;">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+</section>
+
+{% endblock %}

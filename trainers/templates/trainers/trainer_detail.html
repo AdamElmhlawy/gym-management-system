@@ -1,0 +1,116 @@
+```django
+{% extends "members/layout.html" %}
+
+{% block title %}Trainer Profile - GymPro{% endblock %}
+
+{% block content %}
+
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">Trainer</div>
+        <h1 class="hero-title">
+            {{ trainer.user.get_full_name|default:trainer.user.username }}
+        </h1>
+        <p class="hero-subtitle">
+            View trainer information, experience, and contact details.
+        </p>
+    </div>
+</section>
+
+<section class="admin-section">
+    <div class="showcase-card person-button" style="max-width: 720px; margin: 1.25rem auto;">
+        <div class="card-header member-header"
+             style="padding: 1.5rem; display: flex; justify-content: center; align-items: center; background: rgba(27, 42, 86, 0.04);">
+
+            {% if trainer.user.user_information.profile_pic %}
+                <img
+                    src="{{ trainer.user.user_information.profile_pic.url }}"
+                    alt="{{ trainer.user.get_full_name|default:trainer.user.username }}"
+                    class="profile-avatar"
+                    style="width: 96px; height: 96px; border-radius: 50%;"
+                >
+            {% else %}
+                <img
+                    src="/media/defaults/default_profile.png"
+                    alt="Profile picture"
+                    class="profile-avatar"
+                    style="width: 96px; height: 96px; border-radius: 50%;"
+                >
+            {% endif %}
+        </div>
+
+        <div class="card-content" style="padding: 1.25rem;">
+
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <div class="card-name">
+                    {{ trainer.user.get_full_name|default:trainer.user.username }}
+                </div>
+                <div class="card-email">
+                    {{ trainer.user.email }}
+                </div>
+            </div>
+
+            {% if request.user.role == "admin" %}
+                <a href="{% url 'trainer-update' trainer.user.id %}" class="pagination-btn">
+                    Edit
+                </a>
+            {% endif %}
+        </div>
+
+            <div class="card-detail">
+                <strong>Username:</strong>
+                {{ trainer.user.username }}
+            </div>
+
+            <div class="card-detail">
+                <strong>Role:</strong>
+                {{ trainer.user.role|title }}
+            </div>
+
+            <div class="card-detail">
+                <strong>Phone:</strong>
+                {{ trainer.user.userinformation.phone_number }}
+            </div>
+
+            <div class="card-detail">
+                <strong>Branch:</strong>
+                {{ trainer.user.userinformation.branch.branch_name }}
+            </div>
+
+            <div class="card-detail">
+                <strong>Joined:</strong>
+                {{ trainer.user.date_joined|date:"F j, Y" }}
+            </div>
+
+            <div class="card-detail">
+                <strong>Years of Experience:</strong>
+                {{ trainer.years_of_experience }}
+            </div>
+
+            <div class="card-detail">
+                <strong>Salary:</strong>
+                ${{ trainer.salary }}
+            </div>
+
+            <div class="card-detail">
+                <strong>Status:</strong>
+                {% if trainer.is_active %}
+                    Active
+                {% else %}
+                    Inactive
+                {% endif %}
+            </div>
+
+            <div class="card-badges" style="margin-top: 1rem;">
+                <span class="credit-badge trainer">
+                    Trainer
+                </span>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+```

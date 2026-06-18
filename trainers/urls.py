@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import TrainerProfileCreateView
+from .views import TrainerDetailView, TrainerUpdateView
 
 urlpatterns = [
-    path("trainers/<int:user_id>/create", TrainerProfileCreateView.as_view(), name="trainer-profile-create")
+    path("<int:user_id>/", TrainerDetailView.as_view(), name="trainer-detail"),
+    path("<int:user_id>/edit", TrainerUpdateView.as_view(), name="trainer-update"),
 ]

@@ -9,7 +9,8 @@ class TrainerProfile(models.Model):
     is_active = models.BooleanField(default=False)
     is_fired = models.BooleanField(default=False)
     salary = models.DecimalField(max_digits=10, decimal_places=2,
-                                validators=[MinValueValidator(Decimal('0.0'))],)
+                                validators=[MinValueValidator(Decimal('0.0'))],
+                                default = 0.0)
     years_of_experience = models.PositiveIntegerField(default=0)
 
     def clean(self):

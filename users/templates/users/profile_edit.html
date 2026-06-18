@@ -1,0 +1,57 @@
+{% extends "members/layout.html" %}
+
+{% block title %}Edit Profile - GymPro{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+    <div class="auth-shell" style="width: min(760px, 100%); grid-template-columns: 1fr; margin: 1.5rem auto;">
+        <form class="auth-panel signup-form" method="post" enctype="multipart/form-data" novalidate style="width: 100%;">
+            {% csrf_token %}
+
+            <h2>Edit Profile</h2>
+
+            {% if user_form.non_field_errors %}
+                <div class="form-alert">{{ user_form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-section">
+                {% for field in user_form %}
+                    <div class="form-field">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if trainer_form %}
+                <hr>
+                <h3>Trainer Profile</h3>
+                {% if trainer_form.non_field_errors %}
+                    <div class="form-alert">{{ trainer_form.non_field_errors }}</div>
+                {% endif %}
+                <div class="form-section">
+                    {% for field in trainer_form %}
+                        <div class="form-field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="field-error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+                <button type="submit" class="submit-button">Save changes</button>
+                <a href="{% url 'profile' %}" class="pagination-btn" style="display:inline-flex; align-items:center;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

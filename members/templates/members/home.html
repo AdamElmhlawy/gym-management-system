@@ -54,7 +54,7 @@
     {% if trainers %}
         <div class="showcase-grid">
             {% for trainer in trainers %}
-                <a href="#" class="showcase-card person-button">
+                <a href="{% url 'trainer-detail' trainer.user.id %}" class="showcase-card person-button">
                     <div class="card-header trainer-header">
                         {% if trainer.user.user_information.profile_pic %}
                             <img

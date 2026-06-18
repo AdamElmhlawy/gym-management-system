@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 
 from django.views.generic import TemplateView
 
-from .models import Plan
+from members.models import Plan
 from users.models import User, TrainerProfile
 
 
@@ -16,7 +16,7 @@ class HomeListView(TemplateView):
         ).select_related("user_information").order_by("username")
 
         trainers = TrainerProfile.objects.filter(is_active=True
-        ).select_related("user", "user__user_information").order_by("years_of_experience")
+        ).select_related("user", "user__user_information").order_by("-years_of_experience")
 
         #-----------paginators-------------#
         member_paginator = Paginator(members, 4)

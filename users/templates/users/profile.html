@@ -1,0 +1,100 @@
+{% extends "members/layout.html" %}
+
+{% block title %}My Profile - GymPro{% endblock %}
+
+{% block content %}
+
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">Profile</div>
+        <h1 class="hero-title">{{ object.user.get_full_name|default:object.user.username }}</h1>
+        <p class="hero-subtitle">Manage your account details, contact information, and membership profile.</p>
+    </div>
+</section>
+
+<section class="admin-section">
+    <div class="showcase-card person-button" style="max-width: 720px; margin: 1.25rem auto;">
+        <div class="card-header member-header" style="padding: 1.5rem; display: flex; justify-content: center; align-items: center; background: rgba(27, 42, 86, 0.04);">
+            {% if object.profile_pic %}
+                <img
+                    src="{{ object.profile_pic.url }}"
+                    alt="{{ object.user.get_full_name|default:object.user.username }} profile picture"
+                    class="profile-avatar"
+                    style="width: 96px; height: 96px; border-radius: 50%;"
+                >
+            {% else %}
+                <img
+                    src="/media/defaults/default_profile.png"
+                    alt="Profile picture"
+                    class="profile-avatar"
+                    style="width: 96px; height: 96px; border-radius: 50%;"
+                >
+            {% endif %}
+        </div>
+
+        <div class="card-content" style="padding: 1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
+                <div>
+                    <div class="card-name">{{ object.user.get_full_name|default:object.user.username }}</div>
+                    <div class="card-email">{{ object.user.email }}</div>
+                </div>
+                <div>
+                    <a href="{% url 'profile-edit' %}" class="pagination-btn">Edit</a>
+                </div>
+            </div>
+
+            <div class="card-detail">
+                <strong>Username:</strong>
+                {{ object.user.username }}
+            </div>
+            <div class="card-detail">
+                <strong>Role:</strong>
+                {{ object.user.role|title }}
+            </div>
+            <div class="card-detail">
+                <strong>Phone:</strong>
+                {{ object.phone_number }}
+            </div>
+            <div class="card-detail">
+                <strong>Branch:</strong>
+                {{ object.branch.branch_name }}
+            </div>
+            <div class="card-detail">
+                <strong>Joined on:</strong>
+                {{ object.join_date }}
+            </div>
+
+            {% if trainer_pending %}
+                <div class="card-detail" style="margin-top:0.75rem; color:var(--muted);">
+                    <strong>Application status:</strong>
+                    Your trainer application is still pending. We will notify you when it is reviewed.
+                </div>
+            {% elif trainer_profile %}
+                <div class="card-detail" style="margin-top:0.75rem;">
+                    <strong>Experience:</strong>
+                    {{ trainer_profile.years_of_experience }} years
+                </div>
+                <div class="card-detail">
+                    <strong>Salary:</strong>
+                    ${{ trainer_profile.salary }}
+                </div>
+                <div class="card-detail">
+                    <strong>Trainer status:</strong>
+                    {% if trainer_profile.is_active %}Active{% else %}Inactive{% endif %}
+                </div>
+            {% else %}
+                {% if object.user.role == "trainer" %}
+                    <div class="card-detail" style="margin-top:0.75rem; color:var(--muted);">
+                        No trainer profile yet. You can create one from the trainers area or contact an admin.
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <div class="card-badges" style="margin-top: 1rem;">
+                <span class="credit-badge {{ object.user.role }}">{{ object.user.role|title }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

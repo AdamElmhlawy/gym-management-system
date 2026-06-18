@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, UserInformation
+from .models import User, UserInformation, TrainerProfile
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -22,3 +22,13 @@ class UserInformationForm(forms.ModelForm):
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
         }
+
+class TrainerProfileForm(forms.ModelForm):
+    class Meta:
+        model = TrainerProfile
+        fields = (
+            'salary',
+            'years_of_experience',
+            'is_active',
+            'is_fired',
+        )

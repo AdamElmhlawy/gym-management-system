@@ -29,13 +29,18 @@
                     <li><a href="{% url 'admin-dashboard' %}" class="nav-link admin-dashboard-link">Admin Dashboard</a></li>
                 {% endif %}
                 
-                <li><a href="#" class="nav-link">Branches</a></li>
-                <li><a href="#" class="nav-link plan-link">Plans</a></li>
+                <li><a href="{% url 'branch-list' %}" class="nav-link">Branches</a></li>
+                <li><a href="{% url 'plan-list' %}"class="nav-link plan-link">Plans</a></li>
                 
             </ul>
 
             <ul class="nav-right">
                 {% if user.is_authenticated %}
+                    <li>
+                        <a href="{% url 'profile' %}" class="auth-link logout-button">
+                            View Profile
+                        </a>
+                    </li>
                     <li>
                         <form action="{% url 'logout' %}" method="post" class="logout-form">
                             {% csrf_token %}
