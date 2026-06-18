@@ -1,42 +1,43 @@
 # Gym Management System 🏋️‍♂️📊
 
-A modern web application built to streamline management operations for fitness clubs and gyms across multiple branches. This version supports membership processing, localized branches directory tracking, and custom subscription tier management.
+A modern, multi-branch fitness facility administration portal engineered with a secure **Django** backend, **PostgreSQL** database ecosystem, and localized interactive dashboards.
 
-*Note: This repository represents a working, in-development snapshot of the application infrastructure.*
+*Note: This repository contains an active, in-development build. Core schemas for profiles, branch logs, and membership metrics have been deployed.*
 
 ---
 
-## ✨ Currently Supported Features
+## ✨ Currently Implemented Features
 
-- **📊 Centralized Dashboard:** Displays high-level analytics and metrics tracking system state.
-- **👥 Member Profiles:** Modules supporting creating profiles, managing info, and sorting member tiers.
-- **🏢 Multi-Branch Configuration:** Tracks and indexes individual gym branches or locations.
-- **💳 Subscription Plan Tiers:** Configures customizable membership packages (pricing, access limits, and durations).
-- **🖼️ Profile Upload Infrastructure:** Native asset management built to handle member profile images.
+- **📊 Management Dashboard:** Houses contextual statistics summarizing aggregate member registrations, branches, and operational tiers.
+- **🏢 Multi-Location Architecture (Branches):** Tracks multiple properties, geographical coordinates, or independent gym locations across a shared platform.
+- **💳 Subscription Plan Matrix:** Formulates tailored access packages detailing tier limits, expiration timelines, and cost variables.
+- **👥 Member Profiles Database:** Organizes full tracking entries for individual member accounts, personal metrics, and current active registration tiers.
+- **⚡ Seeding Engine:** Includes a customized operational command script built to instantaneously prepopulate database instances with sample content for faster testing environment deployment.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend Architecture:** Python 3.x with Flask Microframework
-- **Database Layer:** PostgreSQL
-- **Database Mapping:** Flask-SQLAlchemy (Object-Relational Mapping)
-- **Frontend Layer:** HTML5, CSS3, Vanilla JavaScript, and Jinja2 Template Engine
+- **Backend Architecture:** Python 3.12+ / Django Framework
+- **Data Persistence:** PostgreSQL (Object-Relational Storage)
+- **Object-Relational Mapping (ORM):** Native Django Models Layer
+- **Frontend Presentation:** HTML5, CSS3, JavaScript (Vanilla Execution)
+- **Templating Engine:** Native Django Templates Architecture (`{% load %}`, `{% block %}`)
 
 ---
 
-## 💻 Local Installation & Setup
+## 💻 Local Installation & Deployment
 
-Follow these technical instructions to deploy the current development build on your machine:
+Follow these commands step-by-step to compile the current developer environment locally:
 
 ### Prerequisites
-Ensure your operating system contains:
-- **Python 3.8+**
-- **PostgreSQL Server** (Running locally or via cloud host instance)
+Make sure your host server or personal machine has:
+- **Python 3.12+**
+- **PostgreSQL Database Instance**
 
-### Setup Workflow
+### Installation Workflow
 
-1. **Clone & Target Directory:**
+1. **Clone Workspace Repository:**
    ```bash
    git clone [https://github.com/AdamElmhlawy/gym-management-system.git](https://github.com/AdamElmhlawy/gym-management-system.git)
    cd gym-management-system
